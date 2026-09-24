@@ -4,9 +4,9 @@ import type { Vehicle } from "@/lib/vehicles";
 
 /**
  * Visuel de carte catalogue.
- * - `cardImage` (visuel retouché IA) s'il existe ;
- * - sinon placeholder stylé : photo réelle étalonnée façon "cinéma" si disponible,
- *   ou silhouette graphique + monogramme de marque.
+ * - `cardImage` (photo du véhicule, object-fit: cover, sans déformation) ;
+ * - sinon placeholder stylé : silhouette graphique + monogramme sur fond noir/anthracite
+ *   (ou première photo de galerie si elle existe).
  */
 export function VehicleVisual({
   vehicle,

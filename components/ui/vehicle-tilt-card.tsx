@@ -135,7 +135,7 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
           className="absolute inset-3 grid h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] grid-rows-[1fr_auto] overflow-hidden rounded-xl"
         >
           <VehicleVisual vehicle={vehicle} priority={priority} className="transition-transform duration-700 group-hover:scale-[1.03]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/85" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0.15)_28%,rgba(0,0,0,0)_45%,rgba(0,0,0,0.55)_68%,rgba(0,0,0,0.92)_100%)]" />
           {!lightTouch && <motion.div aria-hidden="true" style={{ background: glare }} className="pointer-events-none absolute inset-0" />}
 
           <div className="relative flex h-full flex-col justify-between p-4 text-white sm:p-5">

@@ -31,7 +31,7 @@ export interface Vehicle {
   baseCity: string;
   cities: string[];
   available: boolean;
-  /** Visuel retouché IA pour la carte catalogue (à déposer dans /public/images/cartes) */
+  /** Photo de la carte catalogue (object-fit: cover) */
   cardImage?: string;
   photos: VehiclePhoto[];
   description: string;
@@ -235,10 +235,33 @@ const SEEDS: Seed[] = [
   },
 ];
 
+/**
+ * Photo de carte catalogue par véhicule (fichiers de /public/catalogue-1-photo).
+ * Les véhicules absents de cette table affichent le placeholder stylé.
+ */
+const CARD_IMAGES: Record<string, string> = {
+  "alfa-romeo-mito": "/catalogue-1-photo/D_Alfa-Romeo-MiTo.jpg",
+  "renault-twingo": "/catalogue-1-photo/D_Renault-Twingo.jpg",
+  "ford-fiesta": "/catalogue-1-photo/C_Ford-Fiesta.jpg",
+  "fiat-punto": "/catalogue-1-photo/C_Fiat-Punto.jpg",
+  "citroen-c5-sw": "/catalogue-1-photo/B_Citroen-C5-SW.jpg",
+  "citroen-nemo": "/catalogue-1-photo/U_Citroen-Nemo.jpg",
+  "renault-kangoo-galerie": "/catalogue-1-photo/U_Renault-Kangoo-II-galerie-toit.jpg",
+  "renault-kangoo-echelle-plancher": "/catalogue-1-photo/U_Renault-Kangoo-II-variante1.jpg",
+  "toyota-yaris": "/catalogue-1-photo/A_Toyota-Yaris.jpg",
+  "vw-t-roc": "/catalogue-1-photo/A_VW-T-Roc.jpg",
+  "renault-4-e-tech": "/catalogue-1-photo/A_Renault-4-E-Tech.jpg",
+  "bmw-x2": "/catalogue-1-photo/S_BMW-X2.jpg",
+  // Photo provisoire, en attendant la photo dédiée de la Taycan
+  "porsche-taycan": "/vehicules/porsche-taycan/porsche-taycan-01.jpg",
+};
+
+
 export const VEHICLES: Vehicle[] = SEEDS.map(({ views, cities, available, ...v }) => ({
   ...v,
   cities: cities ?? [v.baseCity],
   available: available ?? true,
+  cardImage: v.cardImage ?? CARD_IMAGES[v.id],
   photos: views ? gallery(v.id, `${v.brand} ${v.model}`, views) : [],
 }));
 

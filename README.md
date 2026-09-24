@@ -50,7 +50,7 @@ Les 79 photos fournies ont été associées manuellement aux véhicules et renom
 
 Aucune photo fournie pour : Opel Adam, Ford Focus, Opel Corsa E, Dacia Sandero, Peugeot 2008, Citroën C4 Picasso, Renault Clio, Fiat 500, Opel Astra Plus, Renault Captur, Fiat 500L, Citroën C3, Dacia Dokker → placeholder graphique. Ajouter des photos : déposer les fichiers dans `public/vehicules/<id>/` et renseigner `views` dans `lib/vehicles.ts`.
 
-**Visuels des cartes catalogue (retouchés IA)** : déposer `public/images/cartes/<id>.webp` puis ajouter `cardImage: "/images/cartes/<id>.webp"` au véhicule. En attendant, la carte affiche un placeholder stylé (photo réelle étalonnée si disponible, sinon silhouette + monogramme).
+**Photos des cartes catalogue** : `public/catalogue-1-photo/`, associées à chaque véhicule dans la table `CARD_IMAGES` de `lib/vehicles.ts`. Les véhicules sans photo affichent un placeholder (silhouette sur fond noir/anthracite). La Porsche Taycan utilise provisoirement sa photo de galerie.
 
 ## Google Calendar
 
