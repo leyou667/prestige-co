@@ -25,7 +25,10 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
   );
 
   React.useEffect(() => {
-    thumbs.current?.children[index]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    // Défilement horizontal de la bande de miniatures uniquement (jamais de la page)
+    const list = thumbs.current;
+    const item = list?.children[index] as HTMLElement | undefined;
+    if (list && item) list.scrollTo({ left: item.offsetLeft - (list.clientWidth - item.offsetWidth) / 2, behavior: "smooth" });
   }, [index]);
 
   React.useEffect(() => {
@@ -113,7 +116,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
       </div>
 
       {photos.length > 1 && (
-        <ul ref={thumbs} className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+        <ul ref={thumbs} className="relative mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
           {photos.map((p, i) => (
             <li key={p.src} className="shrink-0">
               <button

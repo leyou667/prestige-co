@@ -41,9 +41,28 @@ export interface Vehicle {
 
 const uniq = (...lists: readonly (readonly CityName[])[]): CityName[] => Array.from(new Set(lists.flat()));
 
+/** Véhicules dont la photo principale a un fond retravaillé (fichier <id>-studio.jpg). */
+const STUDIO_PHOTOS = new Set([
+  "renault-twingo",
+  "ford-fiesta",
+  "fiat-punto",
+  "citroen-c5-sw",
+  "citroen-nemo",
+  "renault-kangoo-echelle-plancher",
+  "toyota-yaris",
+  "renault-4-e-tech",
+  "bmw-x2",
+  "vw-t-roc",
+]);
+
+function studioPhoto(id: string) {
+  return `/vehicules/${id}/${id}-studio.jpg`;
+}
+
 function gallery(id: string, label: string, views: string[]): VehiclePhoto[] {
   return views.map((view, i) => ({
-    src: `/vehicules/${id}/${id}-${String(i + 1).padStart(2, "0")}.jpg`,
+    // La photo retravaillée remplace la 1re vue (même angle)
+    src: i === 0 && STUDIO_PHOTOS.has(id) ? studioPhoto(id) : `/vehicules/${id}/${id}-${String(i + 1).padStart(2, "0")}.jpg`,
     alt: `${label} — ${view} — location PRESTIGE CONCIERGERIE`,
   }));
 }
@@ -238,22 +257,23 @@ const SEEDS: Seed[] = [
 ];
 
 /**
- * Photo de carte catalogue par véhicule (fichiers de /public/catalogue-1-photo).
+ * Photo de carte catalogue par véhicule : la photo avec fond retravaillé (aussi 1re photo de la galerie),
+ * ou la photo d'origine de /public/catalogue-1-photo pour les véhicules pas encore traités.
  * Les véhicules absents de cette table affichent le placeholder stylé.
  */
 const CARD_IMAGES: Record<string, string> = {
   "alfa-romeo-mito": "/catalogue-1-photo/D_Alfa-Romeo-MiTo.jpg",
-  "renault-twingo": "/catalogue-1-photo/D_Renault-Twingo.jpg",
-  "ford-fiesta": "/catalogue-1-photo/C_Ford-Fiesta.jpg",
-  "fiat-punto": "/catalogue-1-photo/C_Fiat-Punto.jpg",
-  "citroen-c5-sw": "/catalogue-1-photo/B_Citroen-C5-SW.jpg",
-  "citroen-nemo": "/catalogue-1-photo/U_Citroen-Nemo.jpg",
+  "renault-twingo": "/vehicules/renault-twingo/renault-twingo-studio.jpg",
+  "ford-fiesta": "/vehicules/ford-fiesta/ford-fiesta-studio.jpg",
+  "fiat-punto": "/vehicules/fiat-punto/fiat-punto-studio.jpg",
+  "citroen-c5-sw": "/vehicules/citroen-c5-sw/citroen-c5-sw-studio.jpg",
+  "citroen-nemo": "/vehicules/citroen-nemo/citroen-nemo-studio.jpg",
   "renault-kangoo-galerie": "/catalogue-1-photo/U_Renault-Kangoo-II-galerie-toit.jpg",
-  "renault-kangoo-echelle-plancher": "/catalogue-1-photo/U_Renault-Kangoo-II-variante1.jpg",
-  "toyota-yaris": "/catalogue-1-photo/A_Toyota-Yaris.jpg",
-  "vw-t-roc": "/catalogue-1-photo/A_VW-T-Roc.jpg",
-  "renault-4-e-tech": "/catalogue-1-photo/A_Renault-4-E-Tech.jpg",
-  "bmw-x2": "/catalogue-1-photo/S_BMW-X2.jpg",
+  "renault-kangoo-echelle-plancher": "/vehicules/renault-kangoo-echelle-plancher/renault-kangoo-echelle-plancher-studio.jpg",
+  "toyota-yaris": "/vehicules/toyota-yaris/toyota-yaris-studio.jpg",
+  "vw-t-roc": "/vehicules/vw-t-roc/vw-t-roc-studio.jpg",
+  "renault-4-e-tech": "/vehicules/renault-4-e-tech/renault-4-e-tech-studio.jpg",
+  "bmw-x2": "/vehicules/bmw-x2/bmw-x2-studio.jpg",
   // Photo provisoire, en attendant la photo dédiée de la Taycan
   "porsche-taycan": "/vehicules/porsche-taycan/porsche-taycan-01.jpg",
 };

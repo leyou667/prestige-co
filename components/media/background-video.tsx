@@ -9,7 +9,7 @@ export const HERO_POSTER_MOBILE = "/video/hero-poster-480.webp";
 /**
  * Vidéo de fond économe :
  * - rien n'est téléchargé tant que `active` est faux (preload="none", pas d'autoplay côté serveur) ;
- * - sources adaptées à l'écran (480p mobile / 720p desktop, WebM VP9 puis MP4 H.264) ;
+ * - vidéo d'origine 1080p, sans réencodage (aucune perte de qualité) ;
  * - pause automatique hors écran ou onglet masqué ;
  * - poster seul si l'utilisateur préfère réduire les animations ou économise ses données.
  */
@@ -61,10 +61,8 @@ export function BackgroundVideo({ active = true, className }: { active?: boolean
     >
       {allowed && (
         <video ref={ref} className="h-full w-full object-cover" muted loop playsInline preload="none">
-          <source src="/video/hero-480.webm" type="video/webm" media="(max-width: 767px)" />
-          <source src="/video/hero-480.mp4" type="video/mp4" media="(max-width: 767px)" />
-          <source src="/video/hero-720.webm" type="video/webm" />
-          <source src="/video/hero-720.mp4" type="video/mp4" />
+          {/* Vidéo d'origine 1080p, sans réencodage : qualité maximale (1,6 Mo) */}
+          <source src="/video/hero-1080.mp4" type="video/mp4" />
         </video>
       )}
     </div>

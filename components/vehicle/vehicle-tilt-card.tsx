@@ -128,7 +128,7 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
         )}
       >
         <div className="absolute inset-3 grid grid-rows-[1fr_auto] overflow-hidden rounded-xl">
-          <VehicleVisual vehicle={vehicle} priority={priority} className="transition-transform duration-700 group-hover:scale-[1.03]" />
+          <VehicleVisual vehicle={vehicle} priority={priority} fit="full" className="transition-transform duration-700 group-hover:scale-[1.03]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.45)_30%,rgba(0,0,0,0)_50%,rgba(0,0,0,0.7)_68%,rgba(0,0,0,0.94)_100%)]" />
           <m.div aria-hidden="true" style={{ background: glare }} className="pointer-events-none absolute inset-0 [@media(pointer:coarse)]:hidden" />
 

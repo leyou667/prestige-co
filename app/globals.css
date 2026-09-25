@@ -28,9 +28,29 @@
   h1, h2, h3 {
     @apply font-display font-normal;
   }
+  /* Champs date : restent dans leur conteneur (iOS/Safari impose sinon une largeur minimale native)
+     et adoptent le thème sombre/doré, y compris le calendrier déroulant du navigateur */
+  input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    color-scheme: dark;
+    accent-color: theme("colors.gold.DEFAULT");
+  }
+  input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+    min-height: 1.25rem;
+    margin: 0;
+  }
+  input[type="date"]::-webkit-datetime-edit {
+    padding: 0;
+  }
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    opacity: 0.6;
+    filter: invert(78%) sepia(28%) saturate(520%) hue-rotate(2deg) brightness(92%);
+    opacity: 0.85;
     cursor: pointer;
   }
   select option {

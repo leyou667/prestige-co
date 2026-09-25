@@ -1,8 +1,7 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { CalendarDays, Cog, DoorOpen, Fuel, Gauge, MapPin, ShieldCheck, Users } from "lucide-react";
 import { Gallery } from "./gallery";
-import { BookingPanel, MobileBookingBar } from "./booking-panel";
+import { BookingCalendar, BookingForm, BookingProvider, MobileBookingBar } from "./booking-panel";
 import { VehicleGrid } from "./vehicle-grid";
 import { VehicleTiltCard } from "./vehicle-tilt-card";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
@@ -10,7 +9,7 @@ import { JsonLd } from "@/components/json-ld";
 import { CAUTION_TEXT, conditionsSummary, getCategory } from "@/lib/categories";
 import { citiesForVehicle, citySeoSlug } from "@/lib/cities";
 import { SITE } from "@/lib/site";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { VEHICLES, vehicleHref, vehicleName, type Vehicle } from "@/lib/vehicles";
 
 /** Suggestions : même catégorie d'abord, puis les véhicules au prix le plus proche. */
@@ -54,18 +53,44 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         ]}
       />
 
-      <header className="mb-10 max-w-3xl">
-        <p className="eyebrow">
-          {category.name} · Catégorie {vehicle.category}
-        </p>
-        <h1 className="mt-3 font-display text-4xl font-light leading-tight sm:text-5xl">
-          Location {name}
-          {vehicle.variant && <span className="text-muted"> — {vehicle.variant}</span>}
-        </h1>
-        <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">{vehicle.description}</p>
-      </header>
+      <BookingProvider vehicle={vehicle}>
+        {/* a. En-tête */}
+        <header className="mb-6">
+          <p className="eyebrow">
+            {category.name} · Catégorie {vehicle.category}
+          </p>
+          <h1 className="mt-3 font-display text-4xl font-light leading-tight sm:text-5xl">
+            Location {name}
+            {vehicle.variant && <span className="text-muted"> — {vehicle.variant}</span>}
+          </h1>
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-2xs uppercase tracking-[0.1em]",
+                vehicle.available ? "border-silver/40 text-silver" : "border-white/20 text-muted",
+              )}
+            >
+              <span className={cn("h-1.5 w-1.5 rounded-full", vehicle.available ? "bg-emerald-400/80" : "bg-white/40")} />
+              {vehicle.available ? "Disponible" : "Sur demande"}
+            </span>
+            <p className="nums">
+              <span className="font-display text-3xl text-gold">{formatPrice(vehicle.pricePerDay)}</span>
+              <span className="text-sm text-muted"> / jour</span>
+            </p>
+          </div>
+        </header>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        {/* b. Demande de devis / réservation, visible sans défiler */}
+        <section id="reserver" className="scroll-mt-[calc(var(--header-h)+1rem)]" aria-labelledby="reserver-titre">
+          <h2 id="reserver-titre" className="sr-only">
+            Demander un devis ou réserver
+          </h2>
+          <BookingForm />
+        </section>
+
+        {/* c. Galerie photo */}
+        <div className="section-gap">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <h2 className="sr-only">Photos du véhicule</h2>
           <Gallery vehicle={vehicle} />
@@ -82,7 +107,12 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         </aside>
       </div>
 
-      <div className="section-gap grid grid-cols-1 gap-10 lg:grid-cols-12">
+        </div>
+
+        {/* Puis le reste : description, caractéristiques, conditions, disponibilités */}
+        <p className="section-gap max-w-3xl text-sm leading-relaxed text-muted sm:text-base">{vehicle.description}</p>
+
+      <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12">
         <section className="lg:col-span-7" aria-labelledby="caracteristiques">
           <h2 id="caracteristiques" className="title-luxe text-sm text-subtle">
             Caractéristiques
@@ -129,14 +159,13 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         </section>
       </div>
 
-      <section id="reserver" className="section-gap scroll-mt-[calc(var(--header-h)+1rem)]" aria-labelledby="reserver-titre">
-        <h2 id="reserver-titre" className="title-luxe mb-6 text-sm text-subtle">
-          Disponibilités & réservation
-        </h2>
-        <Suspense fallback={<div className="h-[42rem] animate-pulse rounded-2xl bg-anthracite" />}>
-          <BookingPanel vehicle={vehicle} />
-        </Suspense>
-      </section>
+        <section className="section-gap" aria-labelledby="disponibilites">
+          <h2 id="disponibilites" className="title-luxe mb-6 text-sm text-subtle">
+            Disponibilités
+          </h2>
+          <BookingCalendar />
+        </section>
+      </BookingProvider>
 
       <section className="section-gap" aria-labelledby="villes">
         <h2 id="villes" className="title-luxe text-sm text-subtle">

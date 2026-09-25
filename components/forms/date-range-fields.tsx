@@ -7,7 +7,7 @@ import { addDays, parseISODate, toISODate, todayISO } from "@/lib/utils";
 type RenderField = (props: { id: string; label: string; input: React.ReactNode }) => React.ReactNode;
 
 const defaultRender: RenderField = ({ id, label, input }) => (
-  <div>
+  <div className="min-w-0">
     <label htmlFor={id} className="label mb-1.5 block">
       {label}
     </label>

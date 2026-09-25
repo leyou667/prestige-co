@@ -4,7 +4,10 @@ import { vehicleName, type Vehicle } from "@/lib/vehicles";
 
 /**
  * Visuel de carte catalogue.
- * - `cardImage` (photo du véhicule, object-fit: cover, sans déformation) ;
+ * - `cardImage` (photo du véhicule, sans déformation) :
+ *     fit="cover" : remplit le cadre (vignettes) ;
+ *     fit="full"  : photo entière au centre, sur un fond flouté de la même photo (cartes portrait,
+ *                   pour ne pas couper la voiture sur les photos paysage) ;
  * - sinon placeholder stylé : silhouette graphique + monogramme sur fond noir/anthracite
  *   (ou première photo de galerie si elle existe).
  */
@@ -13,16 +16,26 @@ export function VehicleVisual({
   className,
   sizes = "(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw",
   priority,
+  fit = "cover",
 }: {
   vehicle: Vehicle;
   className?: string;
   sizes?: string;
   priority?: boolean;
+  fit?: "cover" | "full";
 }) {
   const alt = `Location ${vehicleName(vehicle, "full")} — PRESTIGE CONCIERGERIE`;
 
+  if (vehicle.cardImage && fit === "full") {
+    return (
+      <div className={cn("absolute inset-0 overflow-hidden bg-ink", className)}>
+        <Image src={vehicle.cardImage} alt="" aria-hidden="true" fill sizes={sizes} quality={60} className="scale-125 object-cover opacity-60 blur-2xl" />
+        <Image src={vehicle.cardImage} alt={alt} fill sizes={sizes} quality={75} priority={priority} className="object-contain" />
+      </div>
+    );
+  }
+
   if (vehicle.cardImage) {
-    // Étalonnage commun : rendu homogène et plus « cinématique » sur toute la collection
     return (
       <Image
         src={vehicle.cardImage}
@@ -31,7 +44,7 @@ export function VehicleVisual({
         sizes={sizes}
         quality={60}
         priority={priority}
-        className={cn("object-cover brightness-[0.88] contrast-[1.08] saturate-[0.85]", className)}
+        className={cn("object-cover", className)}
       />
     );
   }
