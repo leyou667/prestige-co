@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  /* Hauteur du header : partagée par le header, la barre de filtres collante et le menu mobile */
+  --header-h: 4rem;
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 5rem;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ink text-white font-sans antialiased;
+    font-weight: 300;
+  }
+  ::selection {
+    @apply bg-gold/30 text-white;
+  }
+  h1, h2, h3 {
+    @apply font-display font-normal;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.6;
+    cursor: pointer;
+  }
+  select option {
+    @apply bg-anthracite text-white;
+  }
+  /* Focus clavier visible et cohérent sur tout le site */
+  :focus-visible {
+    outline: 1px solid theme("colors.gold.DEFAULT");
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Container fluide : 20px de marge sur mobile, 32px dès md, contenu max 1400px */
+  .container {
+    @apply mx-auto w-full max-w-[1400px] px-5 md:px-8;
+  }
+  /* Libellé de champ / donnée */
+  .label {
+    @apply text-2xs uppercase tracking-wide2 text-muted;
+  }
+  /* Pastille de lien secondaire (villes, catégories, équipements) */
+  .chip {
+    @apply inline-flex min-h-9 items-center rounded-full border border-white/10 px-3.5 py-1.5 text-xs text-subtle transition hover:border-white/40 hover:text-white;
+  }
+  /* Chiffres alignés (prix, numéros) — évite les chiffres elzéviriens de Cormorant */
+  .nums {
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  /* Rythme vertical entre blocs d'une page */
+  .section-gap {
+    @apply mt-16 md:mt-20;
+  }
+  .page-top {
+    @apply pt-10 md:pt-16;
+  }
+  /* Titres en majuscules très espacées : P R E S T I G E */
+  .title-luxe {
+    @apply font-sans uppercase tracking-luxe font-light;
+  }
+  .eyebrow {
+    @apply font-sans text-2xs uppercase tracking-luxe text-gold/90;
+  }
+  .hairline {
+    @apply h-px w-16 bg-gradient-to-r from-transparent via-gold/70 to-transparent;
+  }
+  .field {
+    @apply w-full rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-3 text-sm text-white outline-none transition placeholder:text-muted focus:border-gold/60 focus:bg-white/[0.07];
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/25 bg-black/40 px-6 py-3 text-[0.72rem] uppercase tracking-wide2 text-white transition hover:border-white/60 hover:bg-white/10;
+  }
+  .btn-gold {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-[0.72rem] font-medium uppercase tracking-wide2 text-ink transition hover:bg-gold-soft disabled:cursor-not-allowed disabled:opacity-40;
+  }
+}
+
+/* ─── Gate : masqué sans flash si déjà franchi pendant la session ─── */
+html[data-gate="passed"] #entry-gate {
+  display: none;
+}
+html:not([data-gate="passed"]) body {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Devis imprimable / PDF ─── */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  html, body {
+    background: #fff !important;
+    color: #0a0a0a !important;
+    overflow: visible !important;
+  }
+  .no-print,
+  #entry-gate,
+  #site-header,
+  #site-footer {
+    display: none !important;
+  }
+  .print-sheet {
+    display: block !important;
+  }
+}
