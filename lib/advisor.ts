@@ -5,12 +5,12 @@
  * puis classe les véhicules du catalogue.
  */
 import type { CategoryCode } from "./categories";
-import { VEHICLES, type Vehicle } from "./vehicles";
+import { VEHICLES, type Vehicle, type VehicleStyle } from "./vehicles";
 
-export type Usage = "quotidien" | "weekend" | "voyage" | "evenement" | "pro";
-export type Passengers = "1-2" | "3-4" | "5+" | "utilitaire";
-export type Budget = "lt50" | "50-100" | "100-300" | "300+";
-export type Style = "eco" | "confort" | "sport" | "luxe";
+type Usage = "quotidien" | "weekend" | "voyage" | "evenement" | "pro";
+type Passengers = "1-2" | "3-4" | "5+" | "utilitaire";
+type Budget = "lt50" | "50-100" | "100-300" | "300+";
+type Style = VehicleStyle;
 
 export interface AdvisorAnswers {
   usage?: Usage;
@@ -24,7 +24,7 @@ interface Option<T extends string> {
   label: string;
 }
 
-export interface AdvisorQuestion<K extends keyof AdvisorAnswers = keyof AdvisorAnswers> {
+interface AdvisorQuestion<K extends keyof AdvisorAnswers = keyof AdvisorAnswers> {
   key: K;
   title: string;
   optional?: boolean;
@@ -80,7 +80,7 @@ export const QUESTIONS: AdvisorQuestion[] = [
 type Weights = Partial<Record<CategoryCode, number>>;
 
 /** Table de mapping réponses → catégories */
-export const USAGE_WEIGHTS: Record<Usage, Weights> = {
+const USAGE_WEIGHTS: Record<Usage, Weights> = {
   quotidien: { D: 4, C: 4, B: 2, A: 2, U: 0 },
   weekend: { B: 3, A: 3, S: 3, C: 1, "S+": 2 },
   voyage: { B: 4, A: 3, S: 2, C: 1 },
@@ -88,35 +88,35 @@ export const USAGE_WEIGHTS: Record<Usage, Weights> = {
   pro: { U: 5, A: 2, S: 2, B: 1 },
 };
 
-export const PASSENGER_WEIGHTS: Record<Passengers, Weights> = {
+const PASSENGER_WEIGHTS: Record<Passengers, Weights> = {
   "1-2": { D: 2, C: 1, A: 1, S: 1, "S+": 2 },
   "3-4": { C: 2, B: 2, A: 2, S: 2, "S+": 1 },
   "5+": { B: 4, C: 1, A: 1, S: 1 },
   utilitaire: { U: 8 },
 };
 
-export const BUDGET_RANGES: Record<Budget, [number, number]> = {
+const BUDGET_RANGES: Record<Budget, [number, number]> = {
   lt50: [0, 50],
   "50-100": [50, 100],
   "100-300": [100, 300],
   "300+": [300, Infinity],
 };
 
-export const BUDGET_WEIGHTS: Record<Budget, Weights> = {
+const BUDGET_WEIGHTS: Record<Budget, Weights> = {
   lt50: { D: 3, C: 3, U: 2, B: 1 },
   "50-100": { B: 3, A: 3, S: 2, U: 1 },
   "100-300": { S: 4, A: 2 },
   "300+": { "S+": 6, S: 2 },
 };
 
-export const STYLE_WEIGHTS: Record<Style, Weights> = {
+const STYLE_WEIGHTS: Record<Style, Weights> = {
   eco: { D: 3, C: 3, U: 1 },
   confort: { B: 3, A: 3, S: 1 },
   sport: { "S+": 4, S: 2, A: 1 },
   luxe: { S: 4, "S+": 4, A: 1 },
 };
 
-export interface Suggestion {
+interface Suggestion {
   vehicle: Vehicle;
   score: number;
   reasons: string[];

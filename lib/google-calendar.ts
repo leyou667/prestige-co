@@ -1,6 +1,7 @@
 import "server-only";
 import { SITE } from "./site";
 import { VEHICLES, getVehicleById, vehicleName } from "./vehicles";
+import type { BusyRange } from "./availability";
 import { parseISODate, toISODate } from "./utils";
 
 /**
@@ -13,7 +14,10 @@ import { parseISODate, toISODate } from "./utils";
  *    peut aussi être rattaché via son titre en le préfixant par `[<id>]`, ex. "[porsche-taycan] Client X".
  *
  * Synchro :
- *  - site → Google : POST /api/reservations crée un événement (statut "tentative").
+ *  - site → Google : POST /api/reservations crée un événement "à confirmer", marqué
+ *    « Disponible » (transparent) : il ne bloque PAS le véhicule tant que le gérant ne l'a pas
+ *    confirmé en le passant en « Occupé » dans Google Calendar. Un tiers malveillant ne peut
+ *    donc pas rendre la flotte indisponible en envoyant de fausses demandes.
  *  - Google → site : push notifications (events.watch) sur /api/calendar-webhook qui invalide
  *    le cache "calendar". Fallback : le cache expire toutes les 4 minutes (polling) et le
  *    calendrier côté client se rafraîchit à la même fréquence.
@@ -39,12 +43,12 @@ function calendarMap(): Record<string, string> {
 
 const defaultCalendar = () => process.env.GOOGLE_CALENDAR_ID || "primary";
 
-export function calendarIdFor(vehicleId: string) {
+function calendarIdFor(vehicleId: string) {
   return calendarMap()[vehicleId] || defaultCalendar();
 }
 
 /** Tous les calendriers à surveiller (dédoublonnés) */
-export function allCalendarIds() {
+function allCalendarIds() {
   return Array.from(new Set(VEHICLES.map((v) => calendarIdFor(v.id))));
 }
 
@@ -102,13 +106,6 @@ async function listEvents(calendarId: string): Promise<GEvent[]> {
   return events;
 }
 
-export interface BusyRange {
-  /** Premier jour indisponible (inclus), YYYY-MM-DD */
-  start: string;
-  /** Dernier jour indisponible (inclus), YYYY-MM-DD */
-  end: string;
-}
-
 function eventVehicle(e: GEvent) {
   const tag = e.extendedProperties?.private?.vehicle;
   if (tag) return tag;
@@ -142,7 +139,7 @@ export async function getBusyRanges(vehicleId: string): Promise<BusyRange[]> {
     .filter((r): r is BusyRange => r !== null);
 }
 
-export interface ReservationInput {
+interface ReservationInput {
   vehicleId: string;
   from: string;
   to: string;
@@ -173,7 +170,7 @@ export async function createReservationEvent(input: ReservationInput) {
       input.phone ? `Téléphone : ${input.phone}` : null,
       input.email ? `E-mail : ${input.email}` : null,
       "",
-      "Statut : à confirmer. Supprimez cet événement pour libérer le véhicule sur le site.",
+      "Statut : à confirmer. Pour bloquer le véhicule sur le site, passez l'événement en « Occupé ». Supprimez-le pour refuser la demande.",
     ]
       .filter((l) => l !== null)
       .join("\n"),
@@ -181,6 +178,8 @@ export async function createReservationEvent(input: ReservationInput) {
     start: { date: input.from },
     end: { date: toISODate(end) },
     status: "tentative",
+    // Ne bloque pas la disponibilité avant confirmation par le gérant (passer en « Occupé »)
+    transparency: "transparent",
     colorId: "5",
     extendedProperties: { private: { vehicle: vehicle.id, source: "site" } },
   };
@@ -196,6 +195,7 @@ export async function createReservationEvent(input: ReservationInput) {
 
 /** Enregistre (ou renouvelle) un canal de push notifications pour chaque calendrier utilisé. */
 export async function registerWatchChannels() {
+  if (!process.env.GOOGLE_WEBHOOK_TOKEN) throw new Error("GOOGLE_WEBHOOK_TOKEN manquant");
   const token = await accessToken();
   const address = `${SITE.url}/api/calendar-webhook`;
   const results = [];
@@ -215,8 +215,4 @@ export async function registerWatchChannels() {
     results.push({ calendarId, ok: res.ok, response: await res.json().catch(() => null) });
   }
   return results;
-}
-
-export function rangesOverlap(a: BusyRange, b: BusyRange) {
-  return a.start <= b.end && b.start <= a.end;
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Process, SectionHeading, Services } from "@/components/home/sections";
+import { Process, Services } from "@/components/home/sections";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 export const metadata: Metadata = {
   title: "Services — conciergerie automobile",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <>
-      <div className="container pb-4 pt-10 md:pt-16">
+      <div className="container page-top pb-12 md:pb-16">
         <SectionHeading as="h1" eyebrow="Services" title="Une conciergerie, pas un simple loueur.">
           De la réservation à la restitution, PRESTIGE CONCIERGERIE prend en charge chaque détail de votre location, en Belgique et dans
           le Nord de la France jusqu&apos;à Paris.

@@ -1,5 +1,5 @@
 import type { CategoryCode } from "./categories";
-import { ZONES, ALL_CITIES } from "./cities";
+import { ZONES, ALL_CITIES, type CityName } from "./cities";
 
 export type Fuel = "Essence" | "Diesel" | "Électrique";
 export type Transmission = "Manuelle" | "Automatique";
@@ -8,6 +8,8 @@ export interface VehiclePhoto {
   src: string;
   alt: string;
 }
+
+export type VehicleStyle = "eco" | "confort" | "sport" | "luxe";
 
 export interface Vehicle {
   /** Identifiant stable (utilisé aussi comme tag Google Calendar) */
@@ -27,9 +29,9 @@ export interface Vehicle {
   doors: number;
   features: string[];
   /** Style dominant, utilisé par le conseiller */
-  style: "eco" | "confort" | "sport" | "luxe";
-  baseCity: string;
-  cities: string[];
+  style: VehicleStyle;
+  baseCity: CityName;
+  cities: CityName[];
   available: boolean;
   /** Photo de la carte catalogue (object-fit: cover) */
   cardImage?: string;
@@ -37,7 +39,7 @@ export interface Vehicle {
   description: string;
 }
 
-const uniq = (...lists: readonly (readonly string[])[]) => Array.from(new Set(lists.flat()));
+const uniq = (...lists: readonly (readonly CityName[])[]): CityName[] => Array.from(new Set(lists.flat()));
 
 function gallery(id: string, label: string, views: string[]): VehiclePhoto[] {
   return views.map((view, i) => ({
@@ -48,7 +50,7 @@ function gallery(id: string, label: string, views: string[]): VehiclePhoto[] {
 
 type Seed = Omit<Vehicle, "photos" | "available" | "cities"> & {
   views?: string[];
-  cities?: string[];
+  cities?: CityName[];
   available?: boolean;
 };
 
@@ -265,8 +267,14 @@ export const VEHICLES: Vehicle[] = SEEDS.map(({ views, cities, available, ...v }
   photos: views ? gallery(v.id, `${v.brand} ${v.model}`, views) : [],
 }));
 
-export function vehicleName(v: Pick<Vehicle, "brand" | "model">) {
-  return `${v.brand} ${v.model}`;
+/**
+ * Libellé unique d'un véhicule.
+ * - "short"  : Renault Kangoo II
+ * - "full"   : Renault Kangoo II (Galerie de toit)
+ */
+export function vehicleName(v: Pick<Vehicle, "brand" | "model" | "variant">, format: "short" | "full" = "short") {
+  const base = `${v.brand} ${v.model}`;
+  return format === "full" && v.variant ? `${base} (${v.variant})` : base;
 }
 
 /** URL SEO propre : /location-porsche-taycan-belgique */

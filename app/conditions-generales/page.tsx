@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SectionHeading } from "@/components/home/sections";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { CAUTION_TEXT } from "@/lib/categories";
 import { SITE } from "@/lib/site";
 
@@ -50,21 +50,22 @@ const SECTIONS = [
 
 export default function CGPage() {
   return (
-    <div className="container max-w-3xl pb-24 pt-10 md:pt-16">
+    <div className="container page-top pb-24"><div className="max-w-3xl">
       <SectionHeading as="h1" eyebrow="Informations légales" title="Conditions générales de location">
         Document type à valider et compléter par {SITE.name}.
       </SectionHeading>
       <div className="mt-12 space-y-10">
         {SECTIONS.map((s) => (
           <section key={s.title}>
-            <h2 className="title-luxe text-sm text-white/85">{s.title}</h2>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-white/60">
+            <h2 className="title-luxe text-sm text-subtle">{s.title}</h2>
+            <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
               {s.body.map((b) => (
                 <p key={b}>{b}</p>
               ))}
             </div>
           </section>
         ))}
+      </div>
       </div>
     </div>
   );

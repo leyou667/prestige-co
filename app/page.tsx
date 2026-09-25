@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Hero } from "@/components/home/hero";
-import { About, Presentation, Process, SectionHeading, Services } from "@/components/home/sections";
+import { About, Presentation, Process, Services } from "@/components/home/sections";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { VehicleGrid } from "@/components/vehicle/vehicle-grid";
 import { VEHICLES, getVehicleById, type Vehicle } from "@/lib/vehicles";
 
@@ -21,7 +22,7 @@ export default function HomePage() {
               Toute la collection
             </Link>
           </div>
-          <VehicleGrid vehicles={FEATURED} />
+          <VehicleGrid vehicles={FEATURED} layout="fixed" />
         </div>
       </section>
       <Services />

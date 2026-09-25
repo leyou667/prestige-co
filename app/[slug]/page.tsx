@@ -4,7 +4,7 @@ import { VehicleDetail } from "@/components/vehicle/vehicle-detail";
 import { CategoryLanding, CityLanding } from "@/components/seo/landing";
 import { CATEGORIES, getCategory, getCategoryBySeoSlug } from "@/lib/categories";
 import { CITIES, citySeoSlug } from "@/lib/cities";
-import { VEHICLES, getVehicleBySlug, vehicleSlug } from "@/lib/vehicles";
+import { VEHICLES, getVehicleBySlug, vehicleName, vehicleSlug } from "@/lib/vehicles";
 import { formatPrice } from "@/lib/utils";
 
 /**
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const canonical = `/${slug}`;
   if (r.kind === "vehicle") {
     const v = r.vehicle;
-    const name = `${v.brand} ${v.model}${v.variant ? ` ${v.variant}` : ""}`;
+    const name = vehicleName(v, "full");
     const title = `Location ${name} en Belgique — ${formatPrice(v.pricePerDay)}/jour`;
     const description = `Louez la ${name} (${v.powerHp} ch, ${v.fuel.toLowerCase()}, ${v.transmission.toLowerCase()}) avec PRESTIGE CONCIERGERIE dès ${formatPrice(v.pricePerDay)} par jour. Livraison en Belgique, Nord de la France et Paris. ${getCategory(v.category).name}.`;
     const image = v.cardImage ?? v.photos[0]?.src;

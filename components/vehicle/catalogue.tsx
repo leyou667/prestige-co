@@ -2,120 +2,94 @@
 
 import * as React from "react";
 import { SlidersHorizontal, X, Search, CalendarDays } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
 import { CATEGORIES, type CategoryCode } from "@/lib/categories";
-import { CITIES, getCity } from "@/lib/cities";
+import { getCity } from "@/lib/cities";
 import { BRANDS, POWER_RANGE, PRICE_RANGE, VEHICLES } from "@/lib/vehicles";
+import {
+  DEFAULT_FILTERS,
+  countActiveFilters,
+  filterVehicles,
+  filtersToSearchParams,
+  type CatalogueFilters,
+  type CatalogueSort,
+} from "@/lib/catalogue";
 import { cn, formatDateFr, formatPrice } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
+import { CitySelect } from "@/components/forms/city-select";
+import { OVERLAY_ATTR } from "@/components/layout/whatsapp-float";
 import { VehicleGrid } from "./vehicle-grid";
 
-export interface CatalogueFilters {
-  categories: CategoryCode[];
-  brand: string;
-  model: string;
-  city: string;
-  price: [number, number];
-  power: [number, number];
-  from: string;
-  to: string;
-}
-
-type Sort = "price-asc" | "price-desc" | "power-desc";
-
-export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
-  const [f, setF] = React.useState<CatalogueFilters>({
-    categories: initial.categories ?? [],
-    brand: initial.brand ?? "",
-    model: initial.model ?? "",
-    city: initial.city ?? "",
-    price: [PRICE_RANGE[0], PRICE_RANGE[1]],
-    power: [POWER_RANGE[0], POWER_RANGE[1]],
-    from: initial.from ?? "",
-    to: initial.to ?? "",
-  });
-  const [sort, setSort] = React.useState<Sort>("price-asc");
-  const [panelOpen, setPanelOpen] = React.useState(false);
+/** Véhicules indisponibles sur la période recherchée (Google Calendar). */
+function useUnavailable(from: string, to: string) {
   const [unavailable, setUnavailable] = React.useState<Set<string>>(new Set());
-  const set = <K extends keyof CatalogueFilters>(key: K, value: CatalogueFilters[K]) => setF((prev) => ({ ...prev, [key]: value }));
-
-  // URL partageable, sans rechargement serveur
   React.useEffect(() => {
-    const p = new URLSearchParams();
-    if (f.city) p.set("ville", f.city);
-    if (f.categories.length) p.set("categorie", f.categories.join(","));
-    if (f.brand) p.set("marque", f.brand);
-    if (f.from) p.set("du", f.from);
-    if (f.to) p.set("au", f.to);
-    const qs = p.toString();
-    window.history.replaceState(null, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
-  }, [f.city, f.categories, f.brand, f.from, f.to]);
-
-  // Disponibilités sur les dates recherchées (Google Calendar)
-  React.useEffect(() => {
-    if (!f.from || !f.to) return setUnavailable(new Set());
+    if (!from || !to) return setUnavailable(new Set());
     const ctrl = new AbortController();
-    fetch(`/api/availability?from=${f.from}&to=${f.to}`, { signal: ctrl.signal })
+    fetch(`/api/availability?from=${from}&to=${to}`, { signal: ctrl.signal })
       .then((r) => r.json())
       .then((d: { unavailable?: string[] }) => setUnavailable(new Set(d.unavailable ?? [])))
       .catch(() => {});
     return () => ctrl.abort();
-  }, [f.from, f.to]);
+  }, [from, to]);
+  return unavailable;
+}
 
+/** Synchronise les filtres dans l'URL (partageable), sans rechargement serveur. */
+function useUrlSync(f: CatalogueFilters) {
+  const qs = filtersToSearchParams(f).toString();
+  React.useEffect(() => {
+    window.history.replaceState(null, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
+  }, [qs]);
+}
+
+export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
+  const [f, setF] = React.useState<CatalogueFilters>({ ...DEFAULT_FILTERS, ...initial });
+  const [sort, setSort] = React.useState<CatalogueSort>("price-asc");
+  const [panelOpen, setPanelOpen] = React.useState(false);
+  const set = <K extends keyof CatalogueFilters>(key: K, value: CatalogueFilters[K]) => setF((prev) => ({ ...prev, [key]: value }));
+
+  useUrlSync(f);
+  const unavailable = useUnavailable(f.from, f.to);
+  const results = React.useMemo(() => filterVehicles(f, sort, unavailable), [f, sort, unavailable]);
+  const activeCount = countActiveFilters(f);
   const city = getCity(f.city);
-  const models = React.useMemo(
-    () => Array.from(new Set(VEHICLES.filter((v) => !f.brand || v.brand === f.brand).map((v) => v.model))),
-    [f.brand],
-  );
+  const models = React.useMemo(() => Array.from(new Set(VEHICLES.filter((v) => !f.brand || v.brand === f.brand).map((v) => v.model))), [f.brand]);
 
-  const results = React.useMemo(() => {
-    const q = f.model.trim().toLowerCase();
-    const list = VEHICLES.filter(
-      (v) =>
-        (!f.categories.length || f.categories.includes(v.category)) &&
-        (!f.brand || v.brand === f.brand) &&
-        (!q || `${v.brand} ${v.model} ${v.variant ?? ""}`.toLowerCase().includes(q)) &&
-        (!city || v.cities.includes(city.name)) &&
-        v.pricePerDay >= f.price[0] &&
-        v.pricePerDay <= f.price[1] &&
-        v.powerHp >= f.power[0] &&
-        v.powerHp <= f.power[1],
-    );
-    const sorted = [...list].sort((a, b) =>
-      sort === "price-asc" ? a.pricePerDay - b.pricePerDay : sort === "price-desc" ? b.pricePerDay - a.pricePerDay : b.powerHp - a.powerHp,
-    );
-    // Véhicules indisponibles sur les dates : en fin de liste
-    return sorted.sort((a, b) => Number(unavailable.has(a.id)) - Number(unavailable.has(b.id)));
-  }, [f, city, sort, unavailable]);
+  // Sur mobile, le panneau de filtres s'ouvre en plein écran : on bloque le défilement de la page
+  React.useEffect(() => {
+    if (!panelOpen || window.matchMedia("(min-width: 768px)").matches) return;
+    const html = document.documentElement;
+    html.setAttribute(OVERLAY_ATTR, "");
+    html.style.overflow = "hidden";
+    return () => {
+      html.removeAttribute(OVERLAY_ATTR);
+      html.style.overflow = "";
+    };
+  }, [panelOpen]);
 
   const toggleCategory = (code: CategoryCode) =>
     set("categories", f.categories.includes(code) ? f.categories.filter((c) => c !== code) : [...f.categories, code]);
-
-  const reset = () =>
-    setF({ categories: [], brand: "", model: "", city: "", price: [PRICE_RANGE[0], PRICE_RANGE[1]], power: [POWER_RANGE[0], POWER_RANGE[1]], from: "", to: "" });
-
-  const activeCount =
-    f.categories.length + Number(!!f.brand) + Number(!!f.model) + Number(!!f.city) +
-    Number(f.price[0] !== PRICE_RANGE[0] || f.price[1] !== PRICE_RANGE[1]) +
-    Number(f.power[0] !== POWER_RANGE[0] || f.power[1] !== POWER_RANGE[1]);
+  const reset = () => setF(DEFAULT_FILTERS);
 
   const query = new URLSearchParams({ ...(f.city && { ville: f.city }), ...(f.from && { du: f.from }), ...(f.to && { au: f.to }) }).toString();
 
   const advanced = (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <label className="block">
-        <span className="mb-2 block text-[0.6rem] uppercase tracking-wide2 text-white/50">Marque</span>
+        <span className="label mb-2 block">Marque</span>
         <select value={f.brand} onChange={(e) => setF((p) => ({ ...p, brand: e.target.value, model: "" }))} className="field">
           <option value="">Toutes les marques</option>
           {BRANDS.map((b) => (
-            <option key={b} value={b}>{b}</option>
+            <option key={b} value={b}>
+              {b}
+            </option>
           ))}
         </select>
       </label>
       <label className="block">
-        <span className="mb-2 block text-[0.6rem] uppercase tracking-wide2 text-white/50">Modèle</span>
+        <span className="label mb-2 block">Modèle</span>
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <input list="models" value={f.model} onChange={(e) => set("model", e.target.value)} placeholder="Ex. Taycan" className="field pl-9" />
           <datalist id="models">
             {models.map((m) => (
@@ -125,14 +99,20 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
         </div>
       </label>
       <div>
-        <span className="mb-2 flex justify-between text-[0.6rem] uppercase tracking-wide2 text-white/50">
-          Prix / jour <span className="normal-case tracking-normal text-white/80">{formatPrice(f.price[0])} – {formatPrice(f.price[1])}</span>
+        <span className="label mb-2 flex justify-between">
+          Prix / jour{" "}
+          <span className="nums normal-case tracking-normal text-subtle">
+            {formatPrice(f.price[0])} – {formatPrice(f.price[1])}
+          </span>
         </span>
         <Slider min={PRICE_RANGE[0]} max={PRICE_RANGE[1]} step={5} value={f.price} onValueChange={(v) => set("price", v as [number, number])} thumbLabels={["Prix minimum", "Prix maximum"]} className="mt-4" />
       </div>
       <div>
-        <span className="mb-2 flex justify-between text-[0.6rem] uppercase tracking-wide2 text-white/50">
-          Puissance <span className="normal-case tracking-normal text-white/80">{f.power[0]} – {f.power[1]} ch</span>
+        <span className="label mb-2 flex justify-between">
+          Puissance{" "}
+          <span className="nums normal-case tracking-normal text-subtle">
+            {f.power[0]} – {f.power[1]} ch
+          </span>
         </span>
         <Slider min={POWER_RANGE[0]} max={POWER_RANGE[1]} step={5} value={f.power} onValueChange={(v) => set("power", v as [number, number])} thumbLabels={["Puissance minimum", "Puissance maximum"]} className="mt-4" />
       </div>
@@ -141,9 +121,9 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
 
   return (
     <div>
-      <div className="sticky top-16 z-30 -mx-5 border-b border-white/5 bg-ink/90 px-5 py-4 backdrop-blur-xl md:top-20 md:mx-0 md:rounded-2xl md:border md:border-white/10 md:bg-anthracite/80 md:p-5">
+      <div className="sticky top-[var(--header-h)] z-30 -mx-5 border-b border-white/5 bg-ink/95 px-5 py-3 md:mx-0 md:rounded-2xl md:border md:border-white/10 md:bg-anthracite md:p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <ul className="-mx-5 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0 lg:flex-1">
+          <ul className="-mx-5 flex gap-2 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:px-0 lg:flex-1 lg:flex-wrap">
             {CATEGORIES.map((c) => (
               <li key={c.code} className="shrink-0">
                 <button
@@ -151,8 +131,8 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
                   onClick={() => toggleCategory(c.code)}
                   aria-pressed={f.categories.includes(c.code)}
                   className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-[0.65rem] uppercase tracking-wide2 transition",
-                    f.categories.includes(c.code) ? "border-gold bg-gold text-ink" : "border-white/15 text-white/75 hover:border-white/40",
+                    "min-h-10 rounded-full border px-4 py-2.5 text-2xs uppercase tracking-wide2 transition",
+                    f.categories.includes(c.code) ? "border-gold bg-gold text-ink" : "border-white/15 text-subtle hover:border-white/40",
                   )}
                 >
                   {c.label}
@@ -161,41 +141,67 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
             ))}
           </ul>
           <div className="flex gap-2">
-            <select value={f.city} onChange={(e) => set("city", e.target.value)} className="field !py-2.5 lg:w-48" aria-label="Ville">
-              <option value="">Toutes les villes</option>
-              {CITIES.map((c) => (
-                <option key={c.slug} value={c.slug}>{c.name}</option>
-              ))}
-            </select>
+            <CitySelect value={f.city} onChange={(v) => set("city", v)} emptyLabel="Toutes les villes" className="field !py-2.5 lg:w-48" />
             <button
               type="button"
               onClick={() => setPanelOpen((o) => !o)}
               aria-expanded={panelOpen}
-              className="relative inline-flex shrink-0 items-center gap-2 rounded-lg border border-white/15 px-3.5 text-xs uppercase tracking-wide2 text-white/80 transition hover:border-white/40"
+              aria-controls="catalogue-filters"
+              aria-label={`Filtres${activeCount ? ` (${activeCount} actifs)` : ""}`}
+              className="relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/15 px-3.5 text-xs uppercase tracking-wide2 text-subtle transition hover:border-white/40"
             >
               <SlidersHorizontal className="h-4 w-4" />
-              <span className="hidden sm:inline">Filtres</span>
-              {activeCount > 0 && <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[0.55rem] text-ink">{activeCount}</span>}
+              <span className="hidden sm:inline" aria-hidden="true">
+                Filtres
+              </span>
+              {activeCount > 0 && (
+                <span aria-hidden="true" className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-2xs text-ink">
+                  {activeCount}
+                </span>
+              )}
             </button>
           </div>
         </div>
-        <AnimatePresence initial={false}>
-          {panelOpen && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="pt-5">{advanced}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Desktop / tablette : panneau intégré à la barre */}
+        <div id="catalogue-filters" className={cn("hidden overflow-hidden", panelOpen && "md:block")}>
+          <div className="pt-5">{advanced}</div>
+        </div>
       </div>
 
+      {/* Mobile : panneau plein écran avec bouton de validation */}
+      {panelOpen && (
+        <div role="dialog" aria-modal="true" aria-label="Filtres" className="fixed inset-0 z-[60] flex flex-col bg-ink md:hidden">
+          <div className="flex h-[var(--header-h)] items-center justify-between border-b border-white/10 px-5">
+            <p className="title-luxe text-xs">Filtres</p>
+            <button type="button" onClick={() => setPanelOpen(false)} aria-label="Fermer les filtres" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-6">{advanced}</div>
+          <div className="flex gap-3 border-t border-white/10 px-5 py-4" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
+            <button type="button" onClick={reset} className="btn-ghost flex-1">
+              Réinitialiser
+            </button>
+            <button type="button" onClick={() => setPanelOpen(false)} className="btn-gold flex-[2] whitespace-nowrap !px-4 !tracking-[0.12em]">
+              Voir {results.length} véhicule{results.length > 1 ? "s" : ""}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="mb-6 mt-8 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-white/60">
-          <span className="text-white">{results.length}</span> véhicule{results.length > 1 ? "s" : ""}
-          {city && <> à <span className="text-white">{city.name}</span></>}
+        <p className="text-sm text-muted" aria-live="polite">
+          <span className="nums text-white">{results.length}</span> véhicule{results.length > 1 ? "s" : ""}
+          {city && (
+            <>
+              {" "}
+              à <span className="text-white">{city.name}</span>
+            </>
+          )}
           {f.from && f.to && (
-            <span className="ml-2 inline-flex items-center gap-1 text-white/50">
-              <CalendarDays className="h-3.5 w-3.5" /> {formatDateFr(f.from)} → {formatDateFr(f.to)}
-              <button type="button" onClick={() => setF((p) => ({ ...p, from: "", to: "" }))} aria-label="Effacer les dates" className="ml-1 hover:text-white">
+            <span className="ml-2 inline-flex items-center gap-1">
+              <CalendarDays className="h-3.5 w-3.5" /> <span className="nums">{formatDateFr(f.from)} → {formatDateFr(f.to)}</span>
+              <button type="button" onClick={() => setF((p) => ({ ...p, from: "", to: "" }))} aria-label="Effacer les dates" className="ml-1 inline-flex h-8 w-8 items-center justify-center hover:text-white">
                 <X className="h-3.5 w-3.5" />
               </button>
             </span>
@@ -203,11 +209,11 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
         </p>
         <div className="flex items-center gap-3">
           {activeCount > 0 && (
-            <button type="button" onClick={reset} className="text-xs text-white/50 underline-offset-4 hover:text-white hover:underline">
+            <button type="button" onClick={reset} className="min-h-11 text-xs text-muted underline-offset-4 hover:text-white hover:underline">
               Réinitialiser
             </button>
           )}
-          <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} className="field !w-auto !py-2 text-xs" aria-label="Trier">
+          <select value={sort} onChange={(e) => setSort(e.target.value as CatalogueSort)} className="field !w-auto !py-2.5 text-xs" aria-label="Trier">
             <option value="price-asc">Prix croissant</option>
             <option value="price-desc">Prix décroissant</option>
             <option value="power-desc">Puissance</option>
@@ -216,12 +222,14 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
       </div>
 
       {results.length ? (
-        <VehicleGrid vehicles={results} city={city?.name} query={query || undefined} unavailable={unavailable} />
+        <VehicleGrid vehicles={results} city={city?.name} query={query || undefined} unavailable={unavailable} priorityCount={2} />
       ) : (
         <div className="rounded-2xl border border-white/10 py-20 text-center">
           <p className="font-display text-2xl">Aucun véhicule ne correspond.</p>
-          <p className="mt-2 text-sm text-white/50">Élargissez vos critères ou contactez-nous : nous trouvons souvent une solution.</p>
-          <button type="button" onClick={reset} className="btn-ghost mt-6">Réinitialiser les filtres</button>
+          <p className="mt-2 text-sm text-muted">Élargissez vos critères ou contactez-nous : nous trouvons souvent une solution.</p>
+          <button type="button" onClick={reset} className="btn-ghost mt-6">
+            Réinitialiser les filtres
+          </button>
         </div>
       )}
     </div>

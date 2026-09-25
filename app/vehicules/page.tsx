@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Catalogue } from "@/components/vehicle/catalogue";
-import { SectionHeading } from "@/components/home/sections";
+import { sanitizeRange } from "@/lib/utils";
+import type { CatalogueFilters } from "@/lib/catalogue";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { parseCategory, type CategoryCode } from "@/lib/categories";
 import { getCity } from "@/lib/cities";
 import { BRANDS } from "@/lib/vehicles";
-import { parseISODate } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Collection — location de voitures en Belgique, Nord de la France et Paris",
@@ -23,24 +24,25 @@ export default async function VehiculesPage({ searchParams }: { searchParams: SP
     .map((c) => parseCategory(c))
     .filter((c): c is CategoryCode => Boolean(c));
   const brand = one(sp.marque);
-  const from = one(sp.du);
-  const to = one(sp.au);
+  const city = getCity(one(sp.ville))?.slug;
+  const model = one(sp.modele)?.replace(/[^\p{L}\p{N} .+-]/gu, "").slice(0, 40);
+  const { from, to } = sanitizeRange(one(sp.du), one(sp.au));
+  // Seules les valeurs présentes surchargent les filtres par défaut
+  const initial: Partial<CatalogueFilters> = {
+    categories,
+    ...(city && { city }),
+    ...(brand && BRANDS.includes(brand) && { brand }),
+    ...(model && { model }),
+    ...(from && to && { from, to }),
+  };
 
   return (
-    <div className="container pb-24 pt-10 md:pt-16">
+    <div className="container page-top pb-24">
       <SectionHeading as="h1" eyebrow="La collection" title="Trouvez le véhicule qui vous ressemble.">
         De la citadine économique à la supercar : chaque véhicule est préparé et livré par PRESTIGE CONCIERGERIE.
       </SectionHeading>
       <div className="mt-12">
-        <Catalogue
-          initial={{
-            categories,
-            city: getCity(one(sp.ville))?.slug,
-            brand: brand && BRANDS.includes(brand) ? brand : undefined,
-            from: parseISODate(from) ? from : undefined,
-            to: parseISODate(to) ? to : undefined,
-          }}
-        />
+        <Catalogue initial={initial} />
       </div>
     </div>
   );

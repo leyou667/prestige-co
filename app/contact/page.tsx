@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { SectionHeading } from "@/components/home/sections";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { WhatsAppIcon } from "@/components/icons";
 import { GENERIC_WHATSAPP_MESSAGE, SITE, whatsappUrl } from "@/lib/site";
 
@@ -19,7 +19,7 @@ export default function ContactPage() {
     { icon: MapPin, label: "Zone d'intervention", value: "Belgique · Hauts-de-France · Paris", href: "/vehicules" },
   ];
   return (
-    <div className="container pb-24 pt-10 md:pt-16">
+    <div className="container page-top pb-24">
       <SectionHeading as="h1" eyebrow="Contact" title="Parlons de votre prochaine route.">
         Une question, une demande particulière, un événement à préparer ? Un conseiller PRESTIGE CONCIERGERIE vous répond.
       </SectionHeading>
@@ -33,7 +33,7 @@ export default function ContactPage() {
             >
               <Icon className="mt-1 h-5 w-5 text-gold/80" />
               <span>
-                <span className="block text-[0.62rem] uppercase tracking-luxe text-white/45">{label}</span>
+                <span className="block text-2xs uppercase tracking-luxe text-muted">{label}</span>
                 <span className="mt-2 block font-display text-2xl group-hover:text-gold">{value}</span>
               </span>
             </Link>

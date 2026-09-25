@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export interface SlideTab {
@@ -16,7 +16,7 @@ interface Position {
   opacity: number;
 }
 
-/** Menu en pilule avec curseur qui glisse au survol et se repose sur l'onglet actif. */
+/** Menu en pilule avec curseur qui glisse au survol / focus clavier et se repose sur l'onglet actif. */
 export function SlideTabs({ tabs, activeIndex, className }: { tabs: SlideTab[]; activeIndex: number; className?: string }) {
   const refs = React.useRef<(HTMLLIElement | null)[]>([]);
   const [position, setPosition] = React.useState<Position>({ left: 0, width: 0, opacity: 0 });
@@ -31,12 +31,15 @@ export function SlideTabs({ tabs, activeIndex, className }: { tabs: SlideTab[]; 
 
   React.useEffect(() => {
     moveTo(activeIndex);
+    // Repositionne le curseur une fois les polices chargées (largeurs définitives)
+    document.fonts?.ready.then(() => moveTo(activeIndex)).catch(() => {});
   }, [activeIndex, moveTo]);
 
   return (
     <ul
       onMouseLeave={() => moveTo(activeIndex)}
-      className={cn("relative flex w-fit rounded-full border border-white/10 bg-anthracite/80 p-1 backdrop-blur-md", className)}
+      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && moveTo(activeIndex)}
+      className={cn("relative flex w-fit rounded-full border border-white/10 bg-anthracite p-1", className)}
     >
       {tabs.map((tab, i) => (
         <li
@@ -49,14 +52,18 @@ export function SlideTabs({ tabs, activeIndex, className }: { tabs: SlideTab[]; 
         >
           <Link
             href={tab.href}
+            onFocus={() => moveTo(i)}
             aria-current={i === activeIndex ? "page" : undefined}
-            className={cn("block px-4 py-2 text-[0.68rem] uppercase tracking-wide2 transition-colors duration-300 lg:px-6", i === cursor ? "text-ink" : "text-white")}
+            className={cn(
+              "block whitespace-nowrap rounded-full px-4 py-2 text-2xs uppercase tracking-wide2 transition-colors duration-300 xl:px-6",
+              i === cursor ? "text-ink" : "text-white",
+            )}
           >
             {tab.label}
           </Link>
         </li>
       ))}
-      <motion.li
+      <m.li
         aria-hidden="true"
         animate={{ ...position }}
         transition={{ type: "spring", stiffness: 380, damping: 32 }}

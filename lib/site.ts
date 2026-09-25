@@ -8,7 +8,11 @@ export const SITE = {
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@prestige-conciergerie.com",
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+32 470 00 00 00",
   logo: "/logo/logo-prestige-conciergerie.png",
-  areaServed: ["Belgique", "Hauts-de-France", "Île-de-France"],
+  areaServed: [
+    { type: "Country", name: "Belgique" },
+    { type: "AdministrativeArea", name: "Hauts-de-France" },
+    { type: "City", name: "Paris" },
+  ],
 } as const;
 
 export function whatsappUrl(message?: string) {

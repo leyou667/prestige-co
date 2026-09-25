@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { ArrowLeft, RotateCcw, Sparkles } from "lucide-react";
 import { QUESTIONS, recommend, type AdvisorAnswers } from "@/lib/advisor";
 import { getCategory } from "@/lib/categories";
@@ -38,7 +38,7 @@ export function Advisor({ className }: { className?: string }) {
   return (
     <div
       id="conseiller"
-      className={cn("scroll-mt-28 rounded-2xl border border-white/10 bg-black/50 p-5 backdrop-blur-xl sm:p-6", className)}
+      className={cn("scroll-mt-28 rounded-2xl border border-white/10 bg-black/65 p-5 sm:p-6", className)}
       aria-live="polite"
     >
       <div className="mb-5 flex items-center justify-between gap-3">
@@ -47,18 +47,18 @@ export function Advisor({ className }: { className?: string }) {
             <Sparkles className="h-4 w-4" />
           </span>
           <div>
-            <p className="text-[0.62rem] uppercase tracking-luxe text-white/50">Conseiller IA</p>
+            <p className="text-2xs uppercase tracking-luxe text-muted">Conseiller IA</p>
             <h2 className="font-display text-xl leading-tight">Le véhicule idéal en 4 questions</h2>
           </div>
         </div>
         {step > 0 && (
           <div className="flex gap-1">
             {!done && (
-              <button type="button" onClick={back} className="rounded-full p-2 text-white/50 transition hover:bg-white/10 hover:text-white" aria-label="Question précédente">
+              <button type="button" onClick={back} className="rounded-full p-3 text-muted transition hover:bg-white/10 hover:text-white" aria-label="Question précédente">
                 <ArrowLeft className="h-4 w-4" />
               </button>
             )}
-            <button type="button" onClick={restart} className="rounded-full p-2 text-white/50 transition hover:bg-white/10 hover:text-white" aria-label="Recommencer">
+            <button type="button" onClick={restart} className="rounded-full p-3 text-muted transition hover:bg-white/10 hover:text-white" aria-label="Recommencer">
               <RotateCcw className="h-4 w-4" />
             </button>
           </div>
@@ -70,7 +70,7 @@ export function Advisor({ className }: { className?: string }) {
         <div className="mb-4 flex flex-wrap gap-1.5">
           {QUESTIONS.slice(0, step).map((q) =>
             answers[q.key] ? (
-              <span key={q.key} className="rounded-full bg-white/[0.07] px-3 py-1 text-[0.68rem] text-white/70">
+              <span key={q.key} className="rounded-full bg-white/[0.07] px-3 py-1 text-2xs text-subtle">
                 {labelFor(q.key)}
               </span>
             ) : null,
@@ -87,11 +87,11 @@ export function Advisor({ className }: { className?: string }) {
 
       <AnimatePresence mode="wait">
         {!done ? (
-          <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.28 }}>
+          <m.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.28 }}>
             <p className="mb-4 text-base text-white/90">
               <span className="mr-2 text-xs text-gold">Q{step + 1}.</span>
               {QUESTIONS[step].title}
-              {QUESTIONS[step].optional && <span className="ml-2 text-xs text-white/40">(optionnel)</span>}
+              {QUESTIONS[step].optional && <span className="ml-2 text-xs text-muted">(optionnel)</span>}
             </p>
             <div className="flex flex-wrap gap-2">
               {QUESTIONS[step].options.map((o) => (
@@ -100,7 +100,7 @@ export function Advisor({ className }: { className?: string }) {
                   type="button"
                   onClick={() => choose(QUESTIONS[step].key, o.value)}
                   className={cn(
-                    "rounded-full border px-4 py-2.5 text-xs transition",
+                    "min-h-11 rounded-full border px-4 py-2.5 text-xs transition",
                     answers[QUESTIONS[step].key] === o.value
                       ? "border-gold bg-gold/15 text-white"
                       : "border-white/15 bg-white/[0.03] text-white/80 hover:border-gold/60 hover:text-white",
@@ -110,10 +110,10 @@ export function Advisor({ className }: { className?: string }) {
                 </button>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div key="results" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-            <p className="mb-4 text-sm text-white/75">
+          <m.div key="results" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+            <p className="mb-4 text-sm text-subtle">
               {results.length > 1 ? `Nos ${results.length} recommandations pour vous :` : "Notre recommandation pour vous :"}
             </p>
             <ul className="space-y-3">
@@ -124,15 +124,15 @@ export function Advisor({ className }: { className?: string }) {
                   </div>
                   <div className="flex min-w-0 flex-1 flex-col justify-between">
                     <div>
-                      <p className="text-[0.58rem] uppercase tracking-wide2 text-gold/90">{getCategory(vehicle.category).label}</p>
+                      <p className="text-2xs uppercase tracking-wide2 text-gold/90">{getCategory(vehicle.category).label}</p>
                       <p className="truncate font-display text-lg leading-tight">
                         {vehicle.brand} {vehicle.model}
                       </p>
-                      <p className="truncate text-[0.68rem] text-white/50">{reasons.join(" · ")}</p>
+                      <p className="truncate text-2xs text-muted">{reasons.join(" · ")}</p>
                     </div>
                     <div className="mt-1 flex items-center justify-between gap-2">
-                      <span className="text-sm">{formatPrice(vehicle.pricePerDay)}<span className="text-white/50"> / j</span></span>
-                      <Link href={vehicleHref(vehicle)} className="rounded-full bg-white px-3 py-1.5 text-[0.62rem] font-medium uppercase tracking-wide2 text-ink transition hover:bg-gold">
+                      <span className="nums text-sm">{formatPrice(vehicle.pricePerDay)}<span className="text-muted"> / j</span></span>
+                      <Link href={vehicleHref(vehicle)} className="nums rounded-full bg-white px-3.5 py-2.5 text-2xs font-medium uppercase tracking-wide2 text-ink transition hover:bg-gold">
                         Voir ce véhicule
                       </Link>
                     </div>
@@ -140,10 +140,10 @@ export function Advisor({ className }: { className?: string }) {
                 </li>
               ))}
             </ul>
-            <button type="button" onClick={restart} className="mt-4 text-xs text-white/50 underline-offset-4 hover:text-white hover:underline">
+            <button type="button" onClick={restart} className="mt-4 text-xs text-muted underline-offset-4 hover:text-white hover:underline">
               Refaire le questionnaire
             </button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

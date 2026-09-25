@@ -18,7 +18,7 @@ export const Slider = React.forwardRef<
         <SliderPrimitive.Thumb
           key={i}
           aria-label={thumbLabels?.[i]}
-          className="block h-4 w-4 rounded-full border border-gold bg-ink shadow transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
+          className="relative block h-5 w-5 rounded-full border border-gold bg-ink shadow transition after:absolute after:-inset-3 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
         />
       ))}
     </SliderPrimitive.Root>

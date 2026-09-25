@@ -39,7 +39,22 @@ export function parseCategory(value: string | null | undefined): CategoryCode | 
 
 export const CAUTION_TEXT = "Communiquée sur demande selon véhicule et durée de location";
 
-export function conditionsFor(code: CategoryCode) {
-  const c = getCategory(code);
-  return { minAge: c.minAge, minLicenseYears: c.minLicenseYears, caution: CAUTION_TEXT };
+/** Paliers de conditions (âge / permis), dérivés des catégories pour éviter toute divergence. */
+export function conditionTiers() {
+  const tiers = new Map<string, { minAge: number; minLicenseYears: number; codes: CategoryCode[] }>();
+  for (const c of CATEGORIES) {
+    const key = `${c.minAge}-${c.minLicenseYears}`;
+    const tier = tiers.get(key) ?? { minAge: c.minAge, minLicenseYears: c.minLicenseYears, codes: [] };
+    tier.codes.push(c.code);
+    tiers.set(key, tier);
+  }
+  return Array.from(tiers.values());
 }
+
+export function conditionsSummary() {
+  return conditionTiers()
+    .map((t) => `Catégories ${t.codes.join(", ")} : ${t.minAge} ans et ${t.minLicenseYears} ans de permis minimum`)
+    .join(". ") + ".";
+}
+
+export const MIN_PRICE = Math.min(...CATEGORIES.map((c) => c.fromPrice));

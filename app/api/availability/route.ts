@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getBusyRanges, isCalendarConfigured, POLL_SECONDS, rangesOverlap } from "@/lib/google-calendar";
+import { getBusyRanges, isCalendarConfigured, POLL_SECONDS } from "@/lib/google-calendar";
+import { rangesOverlap } from "@/lib/availability";
 import { VEHICLES, getVehicleById } from "@/lib/vehicles";
 import { parseISODate } from "@/lib/utils";
 
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
 
   const from = params.get("from");
   const to = params.get("to");
-  if (!parseISODate(from) || !parseISODate(to)) return NextResponse.json({ error: "Paramètres manquants" }, { status: 400 });
+  if (!parseISODate(from) || !parseISODate(to) || to! < from!) return NextResponse.json({ error: "Paramètres invalides" }, { status: 400 });
   if (!configured) return NextResponse.json({ configured, unavailable: [] }, { headers });
   try {
     const range = { start: from!, end: to! };

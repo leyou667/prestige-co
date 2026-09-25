@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import type { Vehicle } from "@/lib/vehicles";
+import { vehicleName, type Vehicle } from "@/lib/vehicles";
 
 /**
  * Visuel de carte catalogue.
@@ -19,10 +19,21 @@ export function VehicleVisual({
   sizes?: string;
   priority?: boolean;
 }) {
-  const alt = `Location ${vehicle.brand} ${vehicle.model}${vehicle.variant ? ` ${vehicle.variant}` : ""} — PRESTIGE CONCIERGERIE`;
+  const alt = `Location ${vehicleName(vehicle, "full")} — PRESTIGE CONCIERGERIE`;
 
   if (vehicle.cardImage) {
-    return <Image src={vehicle.cardImage} alt={alt} fill sizes={sizes} priority={priority} className={cn("object-cover", className)} />;
+    // Étalonnage commun : rendu homogène et plus « cinématique » sur toute la collection
+    return (
+      <Image
+        src={vehicle.cardImage}
+        alt={alt}
+        fill
+        sizes={sizes}
+        quality={60}
+        priority={priority}
+        className={cn("object-cover brightness-[0.88] contrast-[1.08] saturate-[0.85]", className)}
+      />
+    );
   }
 
   const photo = vehicle.photos[0];
@@ -34,6 +45,7 @@ export function VehicleVisual({
           alt={alt}
           fill
           sizes={sizes}
+          quality={60}
           priority={priority}
           className="object-cover brightness-[0.6] contrast-[1.15] saturate-[0.55]"
         />

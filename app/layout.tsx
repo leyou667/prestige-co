@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
 import { JsonLd } from "@/components/json-ld";
+import { MotionProvider } from "@/components/motion-provider";
 import { SITE } from "@/lib/site";
 
 const display = Cormorant_Garamond({
@@ -58,11 +59,7 @@ const organization = {
   telephone: SITE.phone,
   email: SITE.email,
   priceRange: "€€ - €€€€",
-  areaServed: [
-    { "@type": "Country", name: "Belgique" },
-    { "@type": "AdministrativeArea", name: "Hauts-de-France" },
-    { "@type": "City", name: "Paris" },
-  ],
+  areaServed: SITE.areaServed.map((a) => ({ "@type": a.type, name: a.name })),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -72,13 +69,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: gateBootScript }} />
       </head>
       <body>
-        <EntryGate />
-        <div id="site-root" className="flex min-h-screen flex-col overflow-x-clip">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-        <WhatsAppFloat />
+        <MotionProvider>
+          <EntryGate />
+          <div id="site-root" className="flex min-h-screen flex-col overflow-x-clip">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <WhatsAppFloat />
+        </MotionProvider>
         <JsonLd data={organization} />
       </body>
     </html>

@@ -1,36 +1,20 @@
-"use client";
-
-import * as React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { preload } from "react-dom";
+import { Sparkles } from "lucide-react";
+import { HeroBackground } from "./hero-background";
 import { SearchBar } from "./search-bar";
 import { QuickFilters } from "./quick-filters";
 import { Advisor } from "./advisor";
+import { HERO_POSTER, HERO_POSTER_MOBILE } from "@/components/media/background-video";
 
 /** Hero unique : recherche + préselection rapide + conseiller IA, sur fond vidéo en parallaxe léger. */
 export function Hero() {
-  const ref = React.useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1.08, 1.18]);
+  // Le poster est l'élément LCP sur desktop : on le précharge en priorité haute
+  preload(HERO_POSTER, { as: "image", fetchPriority: "high", media: "(min-width: 768px)" });
+  preload(HERO_POSTER_MOBILE, { as: "image", fetchPriority: "high", media: "(max-width: 767px)" });
 
   return (
-    <section ref={ref} className="relative isolate -mt-16 overflow-hidden pb-16 pt-28 md:-mt-20 md:pb-24 md:pt-36">
-      <div className="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <motion.div style={{ y, scale }} className="absolute inset-x-0 bottom-40 top-0">
-          <video
-            className="h-full w-full object-cover opacity-45"
-            src="/video/hero-gate-porsche.mp4"
-            poster="/video/hero-gate-poster.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/70 to-ink" />
-      </div>
-
+    <section className="relative isolate -mt-[var(--header-h)] overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36">
+      <HeroBackground />
       <div className="container">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:gap-12">
           <div className="animate-fade-up">
@@ -38,12 +22,16 @@ export function Hero() {
             <h1 className="mt-4 font-display text-4xl font-light leading-[1.05] sm:text-5xl lg:text-6xl">
               Location de véhicules,
               <br />
-              <span className="text-white/60">de l&apos;économique à la supercar.</span>
+              <span className="text-subtle">de l&apos;économique à la supercar.</span>
             </h1>
-            <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/65 sm:text-base">
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-subtle sm:text-base">
               PRESTIGE CONCIERGERIE livre votre véhicule en Belgique et dans le Nord de la France jusqu&apos;à Paris. Choisissez,
               réservez, nous nous occupons du reste.
             </p>
+            {/* Accès direct au conseiller sur mobile (il se trouve plus bas dans le flux) */}
+            <a href="#conseiller" className="btn-ghost mt-6 lg:hidden">
+              <Sparkles className="h-4 w-4 text-gold" /> Laissez-nous choisir pour vous
+            </a>
             <div className="mt-8 space-y-6">
               <SearchBar />
               <QuickFilters />

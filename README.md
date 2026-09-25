@@ -60,14 +60,34 @@ Aucune photo fournie pour : Opel Adam, Ford Focus, Opel Corsa E, Dacia Sandero, 
 4. Isolation par véhicule, au choix :
    - un calendrier par véhicule : `GOOGLE_CALENDAR_MAP={"porsche-taycan":"xxx@group.calendar.google.com", …}` ;
    - ou un calendrier commun : chaque événement porte le tag privé `vehicle=<id>` (posé automatiquement par le site). Pour un événement créé à la main, préfixer son titre par `[<id>]`, ex. `[bmw-x2] Location M. Dupont`.
-5. **Webhook (push notifications)** : définir `GOOGLE_WEBHOOK_TOKEN` et `ADMIN_SECRET`, déployer, puis appeler
+5. **Webhook (push notifications)** : définir `GOOGLE_WEBHOOK_TOKEN` et `ADMIN_SECRET` (valeurs longues et aléatoires, **obligatoires** : sans jeton le webhook refuse tout), déployer, puis appeler
    `curl -H "Authorization: Bearer $ADMIN_SECRET" https://<domaine>/api/calendar-watch`.
    Les canaux expirent (~7 jours) : planifier cet appel (cron hebdomadaire, ex. Vercel Cron).
 
 Fonctionnement :
 - Demande envoyée depuis le devis → `POST /api/reservations` crée un événement « à confirmer » (refusé si conflit).
+  Cet événement est marqué **« Disponible »** dans Google Calendar : il **ne bloque pas** le véhicule sur le site.
+  Pour confirmer une réservation, ouvrez l'événement et passez-le en **« Occupé »** : les dates deviennent indisponibles sur le site.
+  Supprimez-le pour refuser la demande. (Protection : un tiers ne peut pas rendre la flotte indisponible avec de fausses demandes.)
 - Événement modifié/supprimé dans Google Calendar → `POST /api/calendar-webhook` invalide le cache : la disponibilité est mise à jour immédiatement.
 - Fallback : cache de 4 minutes côté serveur + rafraîchissement du calendrier toutes les 4 minutes côté client.
 - Sans configuration, le site fonctionne : toutes les dates sont affichées disponibles (« confirmées sur demande ») et les demandes passent par WhatsApp.
 
 Le dossier ne contient aucune mention d'outil de génération externe : la seule marque est **PRESTIGE CONCIERGERIE**.
+
+## Sécurité
+
+- En-têtes HTTP : CSP, HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` (`next.config.ts`).
+- `/api/reservations` : JSON uniquement, même origine, corps ≤ 10 Ko, dates strictes (≤ 60 jours, horizon 1 an), ville vérifiée
+  pour le véhicule, options filtrées, champs nettoyés, **prix recalculé côté serveur**, champ piège anti-robots + délai minimal,
+  limite de 5 demandes / 10 min / IP par instance.
+- **Recommandé en production** : ajouter une règle *Vercel Firewall → Rate limiting* sur `/api/reservations`
+  (ex. 10 requêtes / 10 min / IP) pour une limite partagée entre toutes les instances.
+- Secrets comparés en temps constant (`lib/security.ts`), `server-only` sur le code Google.
+- Photos : les plaques d'immatriculation visibles (y compris des véhicules en arrière-plan) ont été floutées.
+  Les versions d'origine restent dans l'historique git : si le dépôt est public, le passer en privé ou réécrire l'historique.
+
+## Médias
+
+- Vidéo de fond : `public/video/hero-720.{webm,mp4}` (desktop) et `hero-480.{webm,mp4}` (mobile), posters WebP.
+  Elle n'est téléchargée que si l'écran d'entrée ou le hero d'accueil est affiché, et se met en pause hors écran.

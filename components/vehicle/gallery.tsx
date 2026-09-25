@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, type PanInfo } from "framer-motion";
+import { AnimatePresence, m, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Vehicle } from "@/lib/vehicles";
@@ -47,7 +47,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
     return (
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10">
         <VehicleVisual vehicle={vehicle} priority sizes="(min-width: 1024px) 60vw, 100vw" />
-        <p className="absolute inset-x-0 bottom-5 text-center text-[0.62rem] uppercase tracking-luxe text-white/50">
+        <p className="absolute inset-x-0 bottom-5 text-center text-2xs uppercase tracking-luxe text-muted">
           Photos disponibles sur demande
         </p>
       </div>
@@ -61,7 +61,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
 
   const slide = (fit: "cover" | "contain", sizes: string) => (
     <AnimatePresence initial={false} custom={direction} mode="popLayout">
-      <motion.div
+      <m.div
         key={index}
         custom={direction}
         initial={{ opacity: 0, x: direction >= 0 ? 60 : -60 }}
@@ -83,17 +83,17 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
           draggable={false}
           className={fit === "cover" ? "object-cover" : "object-contain"}
         />
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   );
 
   const arrows = (big?: boolean) =>
     photos.length > 1 && (
       <>
-        <button type="button" onClick={() => go(-1)} aria-label="Photo précédente" className={cn("absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition hover:bg-black/80", big ? "p-3" : "p-2")}>
+        <button type="button" onClick={() => go(-1)} aria-label="Photo précédente" className={cn("absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition hover:bg-black/80", big ? "p-3.5" : "p-3")}>
           <ChevronLeft className="h-5 w-5" />
         </button>
-        <button type="button" onClick={() => go(1)} aria-label="Photo suivante" className={cn("absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition hover:bg-black/80", big ? "p-3" : "p-2")}>
+        <button type="button" onClick={() => go(1)} aria-label="Photo suivante" className={cn("absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-md transition hover:bg-black/80", big ? "p-3.5" : "p-3")}>
           <ChevronRight className="h-5 w-5" />
         </button>
       </>
@@ -104,10 +104,10 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10 bg-anthracite">
         {slide("cover", "(min-width: 1024px) 60vw, 100vw")}
         {arrows()}
-        <button type="button" onClick={() => setLightbox(true)} aria-label="Agrandir la photo" className="absolute right-3 top-3 z-10 rounded-full border border-white/20 bg-black/50 p-2 text-white backdrop-blur-md transition hover:bg-black/80">
+        <button type="button" onClick={() => setLightbox(true)} aria-label="Agrandir la photo" className="absolute right-3 top-3 z-10 rounded-full border border-white/20 bg-black/50 p-3 text-white backdrop-blur-md transition hover:bg-black/80">
           <Expand className="h-4 w-4" />
         </button>
-        <span className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-3 py-1 text-[0.65rem] tracking-wide2 text-white/80">
+        <span className="absolute bottom-3 left-3 z-10 rounded-full bg-black/60 px-3 py-1 text-2xs tracking-wide2 text-white/80">
           {index + 1} / {photos.length}
         </span>
       </div>
@@ -123,7 +123,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
                   setIndex(i);
                 }}
                 aria-label={`Afficher la photo ${i + 1}`}
-                aria-current={i === index}
+                aria-current={i === index ? "true" : undefined}
                 className={cn("relative block h-16 w-24 overflow-hidden rounded-lg border transition sm:h-20 sm:w-28", i === index ? "border-gold opacity-100" : "border-white/10 opacity-50 hover:opacity-90")}
               >
                 <Image src={p.src} alt="" fill sizes="112px" className="object-cover" />
@@ -135,7 +135,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
 
       <AnimatePresence>
         {lightbox && (
-          <motion.div
+          <m.div
             role="dialog"
             aria-modal="true"
             aria-label="Galerie en plein écran"
@@ -144,9 +144,9 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[90] flex flex-col bg-black/95"
           >
-            <div className="flex items-center justify-between p-4 text-sm text-white/70">
+            <div className="flex items-center justify-between p-4 text-sm text-subtle">
               <span>{index + 1} / {photos.length}</span>
-              <button type="button" onClick={() => setLightbox(false)} aria-label="Fermer" className="rounded-full p-2 hover:bg-white/10">
+              <button type="button" onClick={() => setLightbox(false)} aria-label="Fermer" className="rounded-full p-3 hover:bg-white/10">
                 <X className="h-6 w-6" />
               </button>
             </div>
@@ -154,8 +154,8 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
               {slide("contain", "100vw")}
               {arrows(true)}
             </div>
-            <p className="p-4 text-center text-xs text-white/50">{photos[index].alt}</p>
-          </motion.div>
+            <p className="p-4 text-center text-xs text-muted">{photos[index].alt}</p>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
