@@ -239,7 +239,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
           className="no-print sticky bottom-0 z-30 -mx-5 mt-10 flex items-center justify-between gap-3 border-t border-white/10 bg-ink/95 px-5 py-3 md:static md:mx-0 md:bg-transparent md:px-0 md:pt-6"
           style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
         >
-          <button type="button" onClick={() => goTo(Math.max(0, step - 1))} disabled={step === 0} className="btn-ghost !px-4 disabled:opacity-30 sm:!px-6">
+          <button type="button" onClick={() => goTo(Math.max(0, step - 1))} disabled={step === 0} aria-label="Étape précédente" className="btn-ghost !px-4 disabled:opacity-30 sm:!px-6">
             <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">Retour</span>
           </button>
           {vehicle && (

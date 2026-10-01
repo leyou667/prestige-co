@@ -101,9 +101,8 @@ export function Process() {
         <ol className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map(({ icon: Icon, title, text }, i) => (
             <li key={title} className="relative text-center">
-              <span aria-hidden="true" className="nums font-display text-6xl font-light text-white/[0.06]">
-                0{i + 1}
-              </span>
+              {/* Numéro décoratif rendu en CSS : invisible pour les lecteurs d'écran */}
+              <span aria-hidden="true" data-n={`0${i + 1}`} className="nums block font-display text-6xl font-light text-white/[0.06] before:content-[attr(data-n)]" />
               <Icon className="mx-auto -mt-8 h-6 w-6 text-gold/80" strokeWidth={1.25} />
               <h3 className="mt-5 font-sans text-sm uppercase tracking-wide2">{title}</h3>
               <p className="mx-auto mt-3 max-w-[16rem] text-sm leading-relaxed text-muted">{text}</p>

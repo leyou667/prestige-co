@@ -221,6 +221,7 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
         </div>
       </div>
 
+      <h2 className="sr-only">Résultats de la recherche</h2>
       {results.length ? (
         <VehicleGrid vehicles={results} city={city?.name} query={query || undefined} unavailable={unavailable} priorityCount={2} />
       ) : (

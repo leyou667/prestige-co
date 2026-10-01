@@ -40,6 +40,7 @@ export function WhatsAppFloat() {
   const hidden = !pastHero || overlay;
 
   return (
+    <aside aria-label="Contact rapide">
     <a
       href={whatsappUrl(GENERIC_WHATSAPP_MESSAGE)}
       target="_blank"
@@ -55,5 +56,6 @@ export function WhatsAppFloat() {
     >
       <WhatsAppIcon className="h-6 w-6 text-[#25D366]" />
     </a>
+    </aside>
   );
 }
