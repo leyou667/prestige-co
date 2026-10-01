@@ -67,6 +67,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: gateBootScript }} />
+        {/* Sans JavaScript, l'écran d'entrée ne peut pas être franchi : on l'ignore et le site reste navigable */}
+        <noscript>
+          <style>{`#entry-gate{display:none!important}html body{overflow:auto!important}`}</style>
+        </noscript>
       </head>
       <body>
         <MotionProvider>

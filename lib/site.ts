@@ -1,7 +1,11 @@
 export const SITE = {
   name: "PRESTIGE CONCIERGERIE",
   shortName: "Prestige Conciergerie",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://www.prestige-conciergerie.com").replace(/\/$/, ""),
+  // URL canonique : variable explicite, sinon domaine de production fourni par Vercel, sinon local
+  url: (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
+  ).replace(/\/$/, ""),
   description:
     "PRESTIGE CONCIERGERIE — conciergerie automobile et location de véhicules, de la citadine économique à la supercar, en Belgique et dans le Nord de la France jusqu'à Paris.",
   whatsapp: (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "32470000000").replace(/\D/g, ""),

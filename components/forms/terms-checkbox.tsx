@@ -33,7 +33,7 @@ export function TermsCheckbox({
         />
         <label htmlFor={id} className="cursor-pointer">
           J&apos;ai lu et accepté les{" "}
-          <Link href="/conditions-generales" target="_blank" className="text-gold underline-offset-4 hover:underline">
+          <Link href="/conditions-generales" target="_blank" rel="noopener" className="text-gold underline underline-offset-4 hover:text-gold-soft">
             conditions générales
           </Link>
           <span className="text-gold"> *</span>
