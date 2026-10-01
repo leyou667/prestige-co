@@ -38,7 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   alternates: { canonical: "/" },
-  robots: { index: true, follow: true },
+  // Les déploiements de prévisualisation ne doivent pas être indexés (contenu dupliqué)
+  robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -60,6 +61,20 @@ const organization = {
   email: SITE.email,
   priceRange: "€€ - €€€€",
   areaServed: SITE.areaServed.map((a) => ({ "@type": a.type, name: a.name })),
+  contactPoint: { "@type": "ContactPoint", contactType: "reservations", telephone: SITE.phone, email: SITE.email, availableLanguage: ["French"] },
+};
+
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.name,
+  url: SITE.url,
+  inLanguage: "fr",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE.url}/vehicules?modele={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -82,7 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <WhatsAppFloat />
         </MotionProvider>
-        <JsonLd data={organization} />
+        <JsonLd data={[organization, website]} />
       </body>
     </html>
   );

@@ -43,8 +43,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (r.kind === "vehicle") {
     const v = r.vehicle;
     const name = vehicleName(v, "full");
+    const plainName = `${v.brand} ${v.model}${v.variant ? ` ${v.variant}` : ""}`;
     const title = `Location ${name} en Belgique — ${formatPrice(v.pricePerDay)}/jour`;
-    const description = `Louez la ${name} (${v.powerHp} ch, ${v.fuel.toLowerCase()}, ${v.transmission.toLowerCase()}) avec PRESTIGE CONCIERGERIE dès ${formatPrice(v.pricePerDay)} par jour. Livraison en Belgique, Nord de la France et Paris. ${getCategory(v.category).name}.`;
+    const description = `Louez la ${plainName} (${v.powerHp} ch, ${v.fuel.toLowerCase()}, ${v.transmission.toLowerCase()}) avec PRESTIGE CONCIERGERIE dès ${formatPrice(v.pricePerDay)} par jour. Livraison en Belgique, Nord de la France et Paris. ${getCategory(v.category).name}.`;
     const image = v.cardImage ?? v.photos[0]?.src;
     return {
       title,
