@@ -29,7 +29,8 @@ export function VehicleVisual({
   if (vehicle.cardImage && fit === "full") {
     return (
       <div className={cn("absolute inset-0 overflow-hidden bg-ink", className)}>
-        <Image src={vehicle.cardImage} alt="" aria-hidden="true" fill sizes={sizes} quality={60} className="scale-125 object-cover opacity-60 blur-2xl" />
+        {/* Fond flouté : une vignette minuscule suffit (le flou masque la définition) */}
+        <Image src={vehicle.cardImage} alt="" aria-hidden="true" fill sizes="48px" quality={60} className="scale-125 object-cover opacity-60 blur-2xl" />
         <Image src={vehicle.cardImage} alt={alt} fill sizes={sizes} quality={75} priority={priority} className="object-contain" />
       </div>
     );

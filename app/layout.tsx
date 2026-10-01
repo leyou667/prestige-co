@@ -11,13 +11,13 @@ import { SITE } from "@/lib/site";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["300", "400"],
   variable: "--font-display",
   display: "swap",
 });
 const sans = Montserrat({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500"],
+  weight: ["300", "400", "500"],
   variable: "--font-sans",
   display: "swap",
 });
