@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Catalogue } from "@/components/vehicle/catalogue";
+import { RecentlyViewed } from "@/components/vehicle/recently-viewed";
 import { sanitizeRange } from "@/lib/utils";
 import type { CatalogueFilters } from "@/lib/catalogue";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -42,6 +43,7 @@ export default async function VehiculesPage({ searchParams }: { searchParams: SP
         De la citadine économique à la supercar : chaque véhicule est préparé et livré par PRESTIGE CONCIERGERIE.
       </SectionHeading>
       <div className="mt-12">
+        <RecentlyViewed />
         <Catalogue initial={initial} />
       </div>
     </div>

@@ -4,6 +4,8 @@ import { Gallery } from "./gallery";
 import { BookingCalendar, BookingForm, BookingProvider, MobileBookingBar } from "./booking-panel";
 import { VehicleGrid } from "./vehicle-grid";
 import { VehicleTiltCard } from "./vehicle-tilt-card";
+import { TrackRecentlyViewed } from "./recently-viewed";
+import { ShareButton } from "./share-button";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { CAUTION_TEXT, conditionsSummary, getCategory } from "@/lib/categories";
@@ -77,6 +79,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               <span className="font-display text-3xl text-gold">{formatPrice(vehicle.pricePerDay)}</span>
               <span className="text-sm text-muted"> / jour</span>
             </p>
+            <ShareButton title={`Location ${vehicleName(vehicle, "full")} — PRESTIGE CONCIERGERIE`} />
           </div>
         </header>
 
@@ -190,6 +193,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
       </section>
 
       <MobileBookingBar vehicle={vehicle} />
+      <TrackRecentlyViewed id={vehicle.id} />
 
       <JsonLd
         data={{

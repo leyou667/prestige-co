@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Hero } from "@/components/home/hero";
+import { TrustBar } from "@/components/home/trust-bar";
+import { Faq } from "@/components/home/faq";
 import { About, Presentation, Process, Services } from "@/components/home/sections";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { VehicleGrid } from "@/components/vehicle/vehicle-grid";
@@ -11,6 +13,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <TrustBar />
       <Presentation />
       <section className="border-t border-white/5 py-24 md:py-32">
         <div className="container">
@@ -28,6 +31,7 @@ export default function HomePage() {
       <Services />
       <Process />
       <About />
+      <Faq />
     </>
   );
 }
