@@ -30,7 +30,7 @@ export function Footer() {
         </div>
 
         <nav aria-label="Catégories" className="md:col-span-2">
-          <p className="eyebrow mb-3">Collection</p>
+          <p className="mb-3 text-sm text-white">Collection</p>
           <ul className="text-sm">
             {CATEGORIES.map((c) => (
               <li key={c.code}>
@@ -43,7 +43,7 @@ export function Footer() {
         </nav>
 
         <nav aria-label="Villes desservies" className="md:col-span-4">
-          <p className="eyebrow mb-3">Villes desservies</p>
+          <p className="mb-3 text-sm text-white">Villes desservies</p>
           <ul className="grid grid-cols-2 gap-x-4 text-sm sm:grid-cols-3">
             {CITIES.map((c) => (
               <li key={c.slug}>
@@ -56,7 +56,7 @@ export function Footer() {
         </nav>
 
         <nav aria-label="Informations" className="md:col-span-2">
-          <p className="eyebrow mb-3">Maison</p>
+          <p className="mb-3 text-sm text-white">Maison</p>
           <ul className="text-sm">
             {[...MAIN_NAV.slice(1), ...SECONDARY_NAV].map((item) => (
               <li key={item.href}>
@@ -73,7 +73,7 @@ export function Footer() {
           <p>
             © {year} {SITE.name}. Tous droits réservés.
           </p>
-          <p className="title-luxe text-2xs">Belgique · Hauts-de-France · Paris</p>
+          <p>Belgique, Hauts-de-France et Paris</p>
         </div>
       </div>
     </footer>

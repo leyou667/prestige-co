@@ -16,11 +16,11 @@ export default function ContactPage() {
     { icon: WhatsAppIcon, label: "WhatsApp", value: "Réponse rapide 7j/7", href: whatsappUrl(GENERIC_WHATSAPP_MESSAGE), external: true },
     { icon: Phone, label: "Téléphone", value: SITE.phone, href: `tel:${SITE.phone.replace(/\s/g, "")}` },
     { icon: Mail, label: "E-mail", value: SITE.email, href: `mailto:${SITE.email}` },
-    { icon: MapPin, label: "Zone d'intervention", value: "Belgique · Hauts-de-France · Paris", href: "/vehicules" },
+    { icon: MapPin, label: "Zone d'intervention", value: "Belgique, Hauts-de-France et Paris", href: "/vehicules" },
   ];
   return (
     <div className="container page-top pb-24">
-      <SectionHeading as="h1" eyebrow="Contact" title="Parlons de votre prochaine route.">
+      <SectionHeading as="h1" title="Parlons de votre prochaine route.">
         Une question, une demande particulière, un événement à préparer ? Un conseiller PRESTIGE CONCIERGERIE vous répond.
       </SectionHeading>
       <ul className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/5 bg-white/5 sm:grid-cols-2">
@@ -31,9 +31,9 @@ export default function ContactPage() {
               {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="group flex h-full items-start gap-5 bg-anthracite p-8 transition hover:bg-graphite"
             >
-              <Icon className="mt-1 h-5 w-5 text-gold/80" />
+              <Icon className="mt-1 h-5 w-5 text-silver" />
               <span>
-                <span className="block text-2xs uppercase tracking-luxe text-muted">{label}</span>
+                <span className="block text-sm text-muted">{label}</span>
                 <span className="mt-2 block font-display text-2xl group-hover:text-gold">{value}</span>
               </span>
             </Link>
@@ -42,7 +42,7 @@ export default function ContactPage() {
       </ul>
       <div className="mt-12 flex flex-col gap-3 sm:flex-row">
         <Link href="/devis" className="btn-gold">Demander un devis</Link>
-        <Link href="/#conseiller" className="btn-ghost">Consulter le conseiller IA</Link>
+        <Link href="/#conseiller" className="btn-ghost">Être conseillé</Link>
       </div>
     </div>
   );

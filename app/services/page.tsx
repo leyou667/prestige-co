@@ -12,7 +12,7 @@ export default function ServicesPage() {
   return (
     <>
       <div className="container page-top pb-12 md:pb-16">
-        <SectionHeading as="h1" eyebrow="Services" title="Une conciergerie, pas un simple loueur.">
+        <SectionHeading as="h1" title="Une conciergerie, pas un simple loueur.">
           De la réservation à la restitution, PRESTIGE CONCIERGERIE prend en charge chaque détail de votre location, en Belgique et dans
           le Nord de la France jusqu&apos;à Paris.
         </SectionHeading>

@@ -51,13 +51,13 @@ const SECTIONS = [
 export default function CGPage() {
   return (
     <div className="container page-top pb-24"><div className="max-w-3xl">
-      <SectionHeading as="h1" eyebrow="Informations légales" title="Conditions générales de location">
+      <SectionHeading as="h1" title="Conditions générales de location">
         Document type à valider et compléter par {SITE.name}.
       </SectionHeading>
       <div className="mt-12 space-y-10">
         {SECTIONS.map((s) => (
           <section key={s.title}>
-            <h2 className="title-luxe text-sm text-subtle">{s.title}</h2>
+            <h2 className="h-sub">{s.title}</h2>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
               {s.body.map((b) => (
                 <p key={b}>{b}</p>

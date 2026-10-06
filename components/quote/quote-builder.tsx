@@ -93,7 +93,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
     <div ref={top} className="scroll-mt-[calc(var(--header-h)+1rem)]">
       {/* Étapes : libellé explicite sur mobile, barre segmentée sur tous les écrans */}
       <nav aria-label="Étapes du devis" className="no-print mb-10">
-        <p className="mb-3 text-2xs uppercase tracking-wide2 text-subtle sm:hidden" aria-live="polite">
+        <p className="mb-3 text-xs text-subtle sm:hidden" aria-live="polite">
           Étape {step + 1}/{STEPS.length} · {STEPS[step]}
         </p>
         <ol className="grid grid-cols-5 gap-2">
@@ -108,7 +108,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
                 className={cn("block w-full py-2 text-left", i > step && "cursor-default")}
               >
                 <span className={cn("block h-0.5 rounded-full transition-colors", i <= step ? "bg-gold" : "bg-white/15")} />
-                <span className={cn("mt-2 hidden text-2xs uppercase tracking-wide2 sm:block", i === step ? "text-white" : "text-muted")}>
+                <span className={cn("mt-2 hidden text-xs sm:block", i === step ? "text-white" : "text-muted")}>
                   {i + 1}. {s}
                 </span>
               </button>

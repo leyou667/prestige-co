@@ -13,8 +13,7 @@ import { formatPrice } from "@/lib/utils";
 function LandingCta({ title, devisHref = "/devis" }: { title: string; devisHref?: string }) {
   return (
     <section className="section-gap rounded-2xl border border-white/10 bg-anthracite px-6 py-10 text-center sm:px-10 sm:py-14">
-      <p className="eyebrow">Réservation</p>
-      <h2 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-light leading-tight sm:text-4xl">{title}</h2>
+      <h2 className="mx-auto max-w-2xl font-display text-3xl font-light leading-tight sm:text-4xl">{title}</h2>
       <p className="mx-auto mt-4 max-w-xl text-sm text-muted">
         Devis instantané en ligne, confirmation de la disponibilité et du tarif final sur WhatsApp. Livraison et reprise à l&apos;adresse de
         votre choix.
@@ -24,7 +23,7 @@ function LandingCta({ title, devisHref = "/devis" }: { title: string; devisHref?
           Demander un devis
         </Link>
         <a href={whatsappUrl(GENERIC_WHATSAPP_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn-ghost">
-          <WhatsAppIcon className="h-4 w-4 text-[#25D366]" /> WhatsApp
+          <WhatsAppIcon className="h-4 w-4 text-[#25D366]" /> Réserver via WhatsApp
         </a>
       </div>
     </section>
@@ -41,7 +40,7 @@ export function CityLanding({ city }: { city: City }) {
       <Breadcrumbs items={[{ label: "Accueil", href: "/" }, { label: "Collection", href: "/vehicules" }, { label: city.name, href: `/${citySeoSlug(city)}` }]} />
       <div className="max-w-3xl">
         <p className="eyebrow">
-          {city.region} · {country}
+          {city.region}, {country}
         </p>
         <h1 className="mt-3 font-display text-4xl font-light leading-tight sm:text-5xl">Location de voiture à {city.name}</h1>
         <p className="mt-5 text-sm leading-relaxed text-muted sm:text-base">
@@ -53,13 +52,13 @@ export function CityLanding({ city }: { city: City }) {
 
       <nav aria-label="Catégories disponibles" className="mt-8 flex flex-wrap gap-2">
         {presentCategories.map((c) => (
-          <Link key={c.code} href={`/vehicules?ville=${city.slug}&categorie=${encodeURIComponent(c.code)}`} prefetch={false} className="chip uppercase tracking-wide2">
+          <Link key={c.code} href={`/vehicules?ville=${city.slug}&categorie=${encodeURIComponent(c.code)}`} prefetch={false} className="chip">
             {c.label} à {city.name}
           </Link>
         ))}
       </nav>
 
-      <h2 className="title-luxe section-gap mb-8 text-sm text-subtle">Véhicules disponibles à {city.name}</h2>
+      <h2 className="h-sub section-gap mb-8">Véhicules disponibles à {city.name}</h2>
       <VehicleGrid vehicles={vehicles} city={city.name} query={`ville=${city.slug}`} />
 
       <section className="section-gap grid grid-cols-1 gap-10 lg:grid-cols-2">
@@ -73,7 +72,7 @@ export function CityLanding({ city }: { city: City }) {
           </ul>
         </div>
         <div>
-          <h2 className="title-luxe text-sm text-subtle">Autres villes en {country}</h2>
+          <h2 className="h-sub">Autres villes en {country}</h2>
           <ul className="mt-5 flex flex-wrap gap-2">
             {others.map((c) => (
               <li key={c.slug}>
@@ -98,7 +97,7 @@ export function CategoryLanding({ category }: { category: Category }) {
       <Breadcrumbs items={[{ label: "Accueil", href: "/" }, { label: "Collection", href: "/vehicules" }, { label: category.name, href: `/${category.seoSlug}` }]} />
       <SectionHeading
         as="h1"
-        eyebrow={`Catégorie ${category.code} · dès ${category.fromPrice} € / jour`}
+        eyebrow={`Catégorie ${category.code}, dès ${category.fromPrice} € par jour`}
         title={<span className="block">Location {category.name.toLowerCase()} en Belgique et dans le Nord de la France</span>}
       >
         {category.tagline} Conditions : {category.minAge} ans minimum et {category.minLicenseYears} ans de permis. Caution :{" "}
@@ -114,7 +113,7 @@ export function CategoryLanding({ category }: { category: Category }) {
       />
 
       <nav aria-label="Autres catégories" className="section-gap">
-        <h2 className="title-luxe text-sm text-subtle">Autres catégories</h2>
+        <h2 className="h-sub">Autres catégories</h2>
         <ul className="mt-5 flex flex-wrap gap-2">
           {CATEGORIES.filter((c) => c.code !== category.code).map((c) => (
             <li key={c.code}>

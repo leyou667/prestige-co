@@ -131,7 +131,7 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
                   onClick={() => toggleCategory(c.code)}
                   aria-pressed={f.categories.includes(c.code)}
                   className={cn(
-                    "min-h-10 rounded-full border px-4 py-2.5 text-2xs uppercase tracking-wide2 transition",
+                    "min-h-10 rounded-full border px-4 py-2.5 text-xs transition",
                     f.categories.includes(c.code) ? "border-gold bg-gold text-ink" : "border-white/15 text-subtle hover:border-white/40",
                   )}
                 >
@@ -172,7 +172,7 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
       {panelOpen && (
         <div role="dialog" aria-modal="true" aria-label="Filtres" className="fixed inset-0 z-[60] flex flex-col bg-ink md:hidden">
           <div className="flex h-[var(--header-h)] items-center justify-between border-b border-white/10 px-5">
-            <p className="title-luxe text-xs">Filtres</p>
+            <p className="text-sm text-white">Filtres</p>
             <button type="button" onClick={() => setPanelOpen(false)} aria-label="Fermer les filtres" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15">
               <X className="h-5 w-5" />
             </button>

@@ -117,7 +117,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
 
       <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12">
         <section className="lg:col-span-7" aria-labelledby="caracteristiques">
-          <h2 id="caracteristiques" className="title-luxe text-sm text-subtle">
+          <h2 id="caracteristiques" className="h-sub">
             Caractéristiques
           </h2>
           <dl className="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/5 bg-white/5 sm:grid-cols-2">
@@ -141,7 +141,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         </section>
 
         <section className="lg:col-span-5" aria-labelledby="conditions">
-          <h2 id="conditions" className="title-luxe text-sm text-subtle">
+          <h2 id="conditions" className="h-sub">
             Conditions de location
           </h2>
           <ul className="mt-6 space-y-px overflow-hidden rounded-2xl border border-white/5 bg-white/5">
@@ -163,7 +163,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
       </div>
 
         <section className="section-gap" aria-labelledby="disponibilites">
-          <h2 id="disponibilites" className="title-luxe mb-6 text-sm text-subtle">
+          <h2 id="disponibilites" className="h-sub mb-6">
             Disponibilités
           </h2>
           <BookingCalendar />
@@ -171,7 +171,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
       </BookingProvider>
 
       <section className="section-gap" aria-labelledby="villes">
-        <h2 id="villes" className="title-luxe text-sm text-subtle">
+        <h2 id="villes" className="h-sub">
           Livraison de la {name} à
         </h2>
         <ul className="mt-5 flex flex-wrap gap-2">

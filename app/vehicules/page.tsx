@@ -39,7 +39,7 @@ export default async function VehiculesPage({ searchParams }: { searchParams: SP
 
   return (
     <div className="container page-top pb-24">
-      <SectionHeading as="h1" eyebrow="La collection" title="Trouvez le véhicule qui vous ressemble.">
+      <SectionHeading as="h1" title="Trouvez le véhicule qui vous ressemble.">
         De la citadine économique à la supercar : chaque véhicule est préparé et livré par PRESTIGE CONCIERGERIE.
       </SectionHeading>
       <div className="mt-12">

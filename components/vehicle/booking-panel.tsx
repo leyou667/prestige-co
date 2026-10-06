@@ -149,15 +149,21 @@ export function MobileBookingBar({ vehicle }: { vehicle: Vehicle }) {
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <p className="nums min-w-0 flex-1 leading-tight">
-        <span className="block truncate text-2xs uppercase tracking-wide2 text-muted">{vehicleName(vehicle)}</span>
+        <span className="block truncate text-xs text-muted">{vehicleName(vehicle)}</span>
         <span className="text-lg">{formatPrice(vehicle.pricePerDay)}</span>
         <span className="text-xs text-muted"> / jour</span>
       </p>
-      <Link href={`/devis?vehicule=${vehicle.id}`} className="btn-ghost !px-4">
-        Devis
-      </Link>
+      <a
+        href={whatsappUrl(`Bonjour, je suis intéressé(e) par le véhicule ${vehicleName(vehicle, "full")}.`)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Réserver via WhatsApp"
+        className="btn-ghost !px-3.5"
+      >
+        <WhatsAppIcon className="h-4 w-4 text-[#25D366]" />
+      </a>
       <a href="#reserver" className="btn-gold !px-4">
-        Réserver
+        Demander un devis
       </a>
     </div>
   );

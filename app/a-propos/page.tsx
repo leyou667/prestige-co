@@ -12,7 +12,7 @@ export default function AProposPage() {
   return (
     <>
       <div className="container page-top">
-        <SectionHeading as="h1" eyebrow="À propos" title="Née d'une passion pour l'automobile et le service.">
+        <SectionHeading as="h1" title="Née d'une passion pour l'automobile et le service.">
           PRESTIGE CONCIERGERIE est née d&apos;une conviction simple : louer une voiture devrait être aussi agréable que la conduire. Du
           trajet quotidien à l&apos;événement d&apos;une vie, nous mettons le même soin à chaque location.
         </SectionHeading>

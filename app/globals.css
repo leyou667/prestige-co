@@ -6,6 +6,9 @@
   color-scheme: dark;
   /* Hauteur du header : partagée par le header, la barre de filtres collante et le menu mobile */
   --header-h: 4rem;
+  /* Courbes partagées (mêmes valeurs que tailwind.config.ts) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 @media (min-width: 768px) {
   :root {
@@ -68,9 +71,9 @@
   .container {
     @apply mx-auto w-full max-w-[1400px] px-5 md:px-8;
   }
-  /* Libellé de champ / donnée */
+  /* Libellé de champ / donnée : petit, lisible, sans majuscules forcées */
   .label {
-    @apply text-2xs uppercase tracking-wide2 text-muted;
+    @apply text-xs text-muted;
   }
   /* Pastille de lien secondaire (villes, catégories, équipements) */
   .chip {
@@ -91,8 +94,13 @@
   .title-luxe {
     @apply font-sans uppercase tracking-luxe font-light;
   }
+  /* Information de contexte au-dessus d'un titre (uniquement quand elle apporte une info) */
   .eyebrow {
-    @apply font-sans text-2xs uppercase tracking-luxe text-gold/90;
+    @apply font-sans text-[0.8125rem] text-silver;
+  }
+  /* Titre de sous-section (fiche véhicule, pages légales…) */
+  .h-sub {
+    @apply font-display text-2xl font-light leading-tight text-white sm:text-3xl;
   }
   .hairline {
     @apply h-px w-16 bg-gradient-to-r from-transparent via-gold/70 to-transparent;
@@ -100,11 +108,21 @@
   .field {
     @apply w-full rounded-lg border border-white/10 bg-white/[0.04] px-3.5 py-3 text-sm text-white outline-none transition placeholder:text-muted focus:border-gold/60 focus:bg-white/[0.07];
   }
+  /* Boutons : retour tactile au clic (scale 0.97, 160 ms), couleurs en 200 ms */
+  .btn-ghost,
+  .btn-gold {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-[0.72rem] uppercase tracking-[0.14em] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100;
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 200ms var(--ease-out),
+      border-color 200ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
   .btn-ghost {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/25 bg-black/40 px-6 py-3 text-[0.72rem] uppercase tracking-wide2 text-white transition hover:border-white/60 hover:bg-white/10;
+    @apply border border-white/25 bg-black/40 text-white hover:border-white/60 hover:bg-white/10;
   }
   .btn-gold {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-[0.72rem] font-medium uppercase tracking-wide2 text-ink transition hover:bg-gold-soft disabled:cursor-not-allowed disabled:opacity-40;
+    @apply bg-gold font-medium text-ink hover:bg-gold-soft;
   }
 }
 

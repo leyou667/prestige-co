@@ -27,6 +27,15 @@ const config: Config = {
         // Plancher de lisibilité pour les micro-libellés (11px)
         "2xs": ["0.6875rem", { lineHeight: "1rem" }],
       },
+      // Courbe commune : départ rapide, arrivée douce (pas de « ease » générique)
+      transitionTimingFunction: {
+        DEFAULT: "cubic-bezier(0.23, 1, 0.32, 1)",
+        out: "cubic-bezier(0.23, 1, 0.32, 1)",
+        "in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      },
+      transitionDuration: {
+        DEFAULT: "200ms",
+      },
       letterSpacing: {
         luxe: "0.35em",
         wide2: "0.2em",
@@ -42,8 +51,8 @@ const config: Config = {
         },
       },
       animation: {
-        "fade-up": "fade-up 0.8s ease-out both",
-        "fade-in": "fade-in 0.9s ease-out both",
+        "fade-up": "fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) both",
+        "fade-in": "fade-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) both",
       },
     },
   },

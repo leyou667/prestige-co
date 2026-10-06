@@ -104,9 +104,9 @@ export function EntryGate() {
         </p>
         <div className="flex w-full max-w-3xl animate-fade-up flex-col gap-3 [animation-delay:650ms] sm:flex-row sm:justify-center">
           <GateButton ref={firstButton} onClick={() => enter("collection")} featured>
-            Explorer notre collection
+            Voir la collection
           </GateButton>
-          <GateButton onClick={() => enter("advisor")}>Notre conseiller IA</GateButton>
+          <GateButton onClick={() => enter("advisor")}>Être conseillé</GateButton>
           <GateButton onClick={() => enter("whatsapp")}>
             <WhatsAppIcon className="h-4 w-4" />
             Réserver via WhatsApp

@@ -30,8 +30,7 @@ export default async function DevisPage({ searchParams }: { searchParams: SP }) 
     <div className="container page-top pb-24">
       <div className="max-w-5xl">
         <div className="no-print mb-12">
-          <p className="eyebrow">Devis instantané</p>
-          <h1 className="mt-3 font-display text-4xl font-light sm:text-5xl">Votre location, calculée en un instant.</h1>
+          <h1 className="font-display text-4xl font-light sm:text-5xl">Votre location, calculée en un instant.</h1>
         </div>
         <QuoteBuilder initial={initial} />
       </div>

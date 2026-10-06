@@ -56,8 +56,8 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link href="/vehicules" className="btn-gold hidden !min-h-10 !px-5 !py-2.5 md:inline-flex">
-              Réserver
+            <Link href="/devis" className="btn-gold hidden !min-h-10 !px-5 !py-2.5 md:inline-flex">
+              Demander un devis
             </Link>
             <button
               type="button"
@@ -91,7 +91,7 @@ export function Header() {
                 href={item.href}
                 aria-current={isActive(item, pathname) ? "page" : undefined}
                 className={cn(
-                  "block border-b border-white/5 py-4 text-sm uppercase tracking-luxe",
+                  "block border-b border-white/5 py-4 font-display text-2xl font-light",
                   isActive(item, pathname) ? "text-gold" : "text-white/85",
                 )}
               >
@@ -101,11 +101,11 @@ export function Header() {
           ))}
         </ul>
         <div className="mt-auto flex flex-col gap-3 pt-8">
-          <Link href="/vehicules" className="btn-gold w-full !py-4">
-            Réserver
+          <Link href="/devis" className="btn-gold w-full !py-4">
+            Demander un devis
           </Link>
           <a href={whatsappUrl(GENERIC_WHATSAPP_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn-ghost w-full !py-4">
-            <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+            <WhatsAppIcon className="h-4 w-4" /> Réserver via WhatsApp
           </a>
         </div>
       </nav>

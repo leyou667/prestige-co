@@ -50,7 +50,7 @@ export function Gallery({ vehicle }: { vehicle: Vehicle }) {
     return (
       <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10">
         <VehicleVisual vehicle={vehicle} priority sizes="(min-width: 1024px) 60vw, 100vw" />
-        <p className="absolute inset-x-0 bottom-5 text-center text-2xs uppercase tracking-luxe text-muted">
+        <p className="absolute inset-x-0 bottom-5 text-center text-xs text-muted">
           Photos disponibles sur demande
         </p>
       </div>
