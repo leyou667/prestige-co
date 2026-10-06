@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { WhatsAppIcon } from "@/components/icons";
 import { GENERIC_WHATSAPP_MESSAGE, whatsappUrl } from "@/lib/site";
@@ -10,8 +11,8 @@ import { cn } from "@/lib/utils";
 export const OVERLAY_ATTR = "data-overlay";
 
 /**
- * Bouton WhatsApp flottant (mobile uniquement).
- * Masqué : sur le devis, sur les fiches véhicule (barre de réservation dédiée), tant que le hero
+ * Barre d'action mobile : « Demander un devis » + WhatsApp, toujours à portée de pouce.
+ * Masquée : sur le devis, sur les fiches véhicule (barre de réservation dédiée), tant que le hero
  * d'accueil est visible, et quand un panneau plein écran est ouvert.
  */
 export function WhatsAppFloat() {
@@ -40,22 +41,25 @@ export function WhatsAppFloat() {
   const hidden = !pastHero || overlay;
 
   return (
-    <aside aria-label="Contact rapide">
-    <a
-      href={whatsappUrl(GENERIC_WHATSAPP_MESSAGE)}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Réserver via WhatsApp"
-      tabIndex={hidden ? -1 : undefined}
+    <aside
+      aria-label="Contact rapide"
       aria-hidden={hidden}
+      inert={hidden}
       className={cn(
-        "no-print fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-anthracite text-white shadow-[0_10px_40px_rgba(0,0,0,0.6)] transition duration-300 active:scale-95 md:hidden",
-        hidden && "pointer-events-none translate-y-4 opacity-0",
+        "no-print fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-white/10 bg-ink/95 px-5 pt-3 md:hidden",
+        hidden && "pointer-events-none translate-y-full opacity-0",
       )}
-      style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+      style={{
+        paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+        transition: "transform 300ms var(--ease-out), opacity 300ms var(--ease-out)",
+      }}
     >
-      <WhatsAppIcon className="h-6 w-6 text-[#25D366]" />
-    </a>
+      <Link href="/devis" className="btn-gold flex-1">
+        Demander un devis
+      </Link>
+      <a href={whatsappUrl(GENERIC_WHATSAPP_MESSAGE)} target="_blank" rel="noopener noreferrer" aria-label="Réserver via WhatsApp" className="btn-ghost !px-4">
+        <WhatsAppIcon className="h-5 w-5 text-[#25D366]" />
+      </a>
     </aside>
   );
 }

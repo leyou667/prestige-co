@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Process, Services } from "@/components/home/sections";
+import { Services } from "@/components/home/sections";
+import { Journey } from "@/components/home/journey";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default function ServicesPage() {
         </SectionHeading>
       </div>
       <Services withHeading={false} />
-      <Process />
+      <Journey />
     </>
   );
 }

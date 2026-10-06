@@ -1,9 +1,10 @@
 import { Hero } from "@/components/home/hero";
 import { Collection } from "@/components/home/collection";
 import { AdvisorSection } from "@/components/home/advisor-section";
-import { TrustBar } from "@/components/home/trust-bar";
+import { Journey } from "@/components/home/journey";
+import { Conciergerie } from "@/components/home/sections";
 import { Faq } from "@/components/home/faq";
-import { About, Process, Services } from "@/components/home/sections";
+import { FinalCta } from "@/components/home/final-cta";
 
 export default function HomePage() {
   return (
@@ -11,11 +12,10 @@ export default function HomePage() {
       <Hero />
       <Collection />
       <AdvisorSection />
-      <TrustBar />
-      <Services />
-      <Process />
-      <About />
+      <Journey />
+      <Conciergerie />
       <Faq />
+      <FinalCta />
     </>
   );
 }

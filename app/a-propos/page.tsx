@@ -17,7 +17,7 @@ export default function AProposPage() {
           trajet quotidien à l&apos;événement d&apos;une vie, nous mettons le même soin à chaque location.
         </SectionHeading>
       </div>
-      <About withHeading={false} />
+      <About />
       <Presentation />
     </>
   );

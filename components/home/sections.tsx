@@ -1,32 +1,59 @@
-import Link from "next/link";
-import { CalendarCheck, Car, Clock, Crown, KeyRound, MapPin, Sparkles, Truck, UserRound } from "lucide-react";
+import { Car, Clock, Crown, KeyRound, Truck, UserRound } from "lucide-react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { CATEGORIES, MIN_PRICE } from "@/lib/categories";
 import { CITIES } from "@/lib/cities";
 import { VEHICLES } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
+/** Accueil : présentation, services et valeurs réunis en une seule section. */
+const PROMISES = [
+  { icon: KeyRound, title: "Livré, puis repris", text: `À domicile, au bureau, à l'hôtel ou à la gare, dans ${CITIES.length} villes.` },
+  { icon: Car, title: "De la citadine à la supercar", text: `${CATEGORIES.length} catégories, dès ${MIN_PRICE} € par jour, jusqu'à la Porsche Taycan.` },
+  { icon: Crown, title: "Événements et professionnels", text: "Mariages, shootings, utilitaires aménagés, chauffeur privé sur demande." },
+  { icon: Clock, title: "Un interlocuteur unique", text: "Joignable sur WhatsApp 7 jours sur 7, en toute discrétion." },
+];
+
+export function Conciergerie() {
+  return (
+    <section aria-labelledby="conciergerie-titre" className="bg-anthracite py-24 md:py-32">
+      <div className="container grid grid-cols-1 gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+        <div className="max-w-xl">
+          <h2 id="conciergerie-titre" className="font-display text-4xl font-light leading-[1.05] sm:text-5xl lg:text-[3.5rem]">
+            Une conciergerie, pas un simple loueur.
+          </h2>
+          <p className="mt-6 text-base leading-relaxed text-muted">
+            PRESTIGE CONCIERGERIE est née d&apos;une conviction simple : louer une voiture devrait être aussi agréable que la conduire.
+            Chaque véhicule est contrôlé, nettoyé et préparé avant la remise des clés, du trajet quotidien à l&apos;événement d&apos;une
+            vie.
+          </p>
+        </div>
+        <ul className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
+          {PROMISES.map(({ icon: Icon, title, text }) => (
+            <li key={title} className="border-t border-white/10 pt-6">
+              <Icon className="h-5 w-5 text-silver" strokeWidth={1.25} aria-hidden="true" />
+              <h3 className="mt-4 font-display text-2xl leading-tight">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/** Page À propos : texte de présentation et quelques repères chiffrés. */
 export function Presentation() {
   const stats = [
-    { value: VEHICLES.length, label: "Véhicules" },
-    { value: CATEGORIES.length, label: "Catégories" },
-    { value: CITIES.length, label: "Villes desservies" },
-    { value: "7j/7", label: "Conciergerie" },
+    { value: VEHICLES.length, label: "véhicules" },
+    { value: CATEGORIES.length, label: "catégories" },
+    { value: CITIES.length, label: "villes desservies" },
+    { value: "7j/7", label: "joignables sur WhatsApp" },
   ];
   return (
-    <section className="py-24 md:py-32">
+    <section className="py-20 md:py-28">
       <div className="container grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-end">
-        <div>
-          <p className="title-luxe whitespace-nowrap text-2xs tracking-[0.5em] text-muted sm:text-sm sm:tracking-[0.6em]">
-            PRESTIGE CONCIERGERIE
-          </p>
-          <h2 className="mt-6 font-display text-3xl font-light leading-tight sm:text-5xl">
-            Chaque trajet mérite
-            <br />
-            <em className="text-gold/90">une attention particulière.</em>
-          </h2>
-        </div>
-        <div className="space-y-5 text-sm leading-relaxed text-muted sm:text-base">
+        <h2 className="font-display text-3xl font-light leading-tight sm:text-5xl">Chaque trajet mérite une attention particulière.</h2>
+        <div className="space-y-5 text-base leading-relaxed text-muted">
           <p>
             PRESTIGE CONCIERGERIE réunit sous une même signature une flotte allant de la citadine économique à la supercar
             électrique. Une seule exigence : vous remettre les clés d&apos;un véhicule impeccable, là où vous en avez besoin.
@@ -38,11 +65,11 @@ export function Presentation() {
         </div>
       </div>
       <div className="container mt-16">
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/5 bg-white/5 md:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-y-10 border-t border-white/10 pt-10 md:grid-cols-4">
           {stats.map((s) => (
-            <div key={s.label} className="flex flex-col-reverse bg-ink px-6 py-8 text-center">
-              <dt className="label mt-2 tracking-luxe">{s.label}</dt>
-              <dd className="nums font-display text-4xl font-light text-white">{s.value}</dd>
+            <div key={s.label} className="flex flex-col-reverse">
+              <dt className="mt-1 text-sm text-muted">{s.label}</dt>
+              <dd className="nums font-display text-5xl font-light text-white">{s.value}</dd>
             </div>
           ))}
         </dl>
@@ -52,7 +79,7 @@ export function Presentation() {
 }
 
 const SERVICES = [
-  { icon: KeyRound, title: "Livraison & reprise", text: "Votre véhicule livré à domicile, au bureau, à l'hôtel ou à la gare, puis repris à l'adresse de votre choix." },
+  { icon: KeyRound, title: "Livraison et reprise", text: "Votre véhicule livré à domicile, au bureau, à l'hôtel ou à la gare, puis repris à l'adresse de votre choix." },
   {
     icon: Car,
     title: "De l'économique à la supercar",
@@ -64,59 +91,23 @@ const SERVICES = [
   { icon: Clock, title: "Assistance 7j/7", text: "Un conseiller dédié joignable sur WhatsApp, de la réservation jusqu'au retour du véhicule." },
 ];
 
+/** Page Services : le détail de chaque service. */
 export function Services({ withHeading = true }: { withHeading?: boolean }) {
   return (
     <section className={cn("bg-anthracite", withHeading ? "py-24 md:py-32" : "py-16 md:py-20")}>
       <div className="container">
         {withHeading && (
-          <SectionHeading eyebrow="Services" title="Une conciergerie, pas un simple loueur.">
-            De la réservation à la restitution, chaque détail est pris en charge.
-          </SectionHeading>
+          <SectionHeading title="Une conciergerie, pas un simple loueur.">De la réservation à la restitution, chaque détail est pris en charge.</SectionHeading>
         )}
-        <ul className={cn("grid gap-px overflow-hidden rounded-2xl border border-white/5 bg-white/5 sm:grid-cols-2 lg:grid-cols-3", withHeading && "mt-14")}>
+        <ul className={cn("grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3", withHeading && "mt-14")}>
           {SERVICES.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="group bg-anthracite p-8 transition-colors duration-500 hover:bg-graphite">
-              <Icon className="h-6 w-6 text-gold/80 transition-transform duration-500 group-hover:-translate-y-0.5" strokeWidth={1.25} />
-              <h3 className="mt-6 font-sans text-sm uppercase tracking-wide2 text-white">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
+            <li key={title} className="border-t border-white/10 pt-6">
+              <Icon className="h-5 w-5 text-silver" strokeWidth={1.25} aria-hidden="true" />
+              <h3 className="mt-4 font-display text-2xl leading-tight">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
             </li>
           ))}
         </ul>
-      </div>
-    </section>
-  );
-}
-
-export function Process() {
-  const steps = [
-    { icon: Car, title: "Choisissez", text: "Parcourez la collection ou laissez notre conseiller IA vous guider." },
-    { icon: CalendarCheck, title: "Demandez un devis", text: "Ville, dates, options : le devis est calculé instantanément." },
-    { icon: Sparkles, title: "Confirmez sur WhatsApp", text: "Nous vérifions la disponibilité et confirmons le tarif final." },
-    { icon: MapPin, title: "Prenez la route", text: "Votre véhicule vous attend, préparé, à l'adresse convenue." },
-  ];
-  return (
-    <section className="py-24 md:py-32">
-      <div className="container">
-        <SectionHeading eyebrow="Réservation" title="Quatre étapes, aucune contrainte." center />
-        <ol className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map(({ icon: Icon, title, text }, i) => (
-            <li key={title} className="relative text-center">
-              {/* Numéro décoratif rendu en CSS : invisible pour les lecteurs d'écran */}
-              <span aria-hidden="true" data-n={`0${i + 1}`} className="nums block font-display text-6xl font-light text-white/[0.06] before:content-[attr(data-n)]" />
-              <Icon className="mx-auto -mt-8 h-6 w-6 text-gold/80" strokeWidth={1.25} />
-              <h3 className="mt-5 font-sans text-sm uppercase tracking-wide2">{title}</h3>
-              <p className="mx-auto mt-3 max-w-[16rem] text-sm leading-relaxed text-muted">{text}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-14 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href="/vehicules" className="btn-gold">
-            Explorer la collection
-          </Link>
-          <Link href="/devis" className="btn-ghost">
-            Demander un devis
-          </Link>
-        </div>
       </div>
     </section>
   );
@@ -128,32 +119,18 @@ const VALUES = [
   { title: "Réactivité", text: "Une réponse rapide sur WhatsApp, 7 jours sur 7, et une disponibilité mise à jour en temps réel." },
 ];
 
-export function About({ withHeading = true }: { withHeading?: boolean }) {
+/** Page À propos : nos valeurs. */
+export function About() {
   return (
-    <section className={cn(withHeading ? "border-t border-white/5 py-24 md:py-32" : "py-16 md:py-24")}>
-      <div className={cn("container grid grid-cols-1 gap-14", withHeading && "lg:grid-cols-2")}>
-        {withHeading && (
-          <SectionHeading eyebrow="À propos" title="Née d'une passion pour l'automobile et le service.">
-            PRESTIGE CONCIERGERIE est née d&apos;une conviction simple : louer une voiture devrait être aussi agréable que la conduire.
-            Du trajet quotidien à l&apos;événement d&apos;une vie, nous mettons le même soin à chaque location, entre la Belgique, les
-            Hauts-de-France et Paris.
-          </SectionHeading>
-        )}
-        <ul className={cn(withHeading ? "space-y-8 self-end" : "grid gap-10 md:grid-cols-3")}>
-          {VALUES.map((v, i) => (
-            <li
-              key={v.title}
-              className={cn("flex gap-6", withHeading ? "border-b border-white/5 pb-8 last:border-0" : "border-t border-white/10 pt-8")}
-            >
-              <span className="nums font-display text-2xl text-gold/70">0{i + 1}</span>
-              <div>
-                <h3 className="font-sans text-sm uppercase tracking-luxe">{v.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{v.text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <section className="py-16 md:py-24">
+      <ul className="container grid gap-10 md:grid-cols-3">
+        {VALUES.map((v) => (
+          <li key={v.title} className="border-t border-white/10 pt-6">
+            <h3 className="font-display text-2xl leading-tight">{v.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{v.text}</p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

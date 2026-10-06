@@ -149,6 +149,57 @@ html:not([data-gate]) .hero-reveal {
   transform: translateY(10px);
 }
 
+/* ─── Parcours de réservation : la ligne se trace au fil du défilement ───
+   CSS pur (scroll-driven animations) ; sans support ou avec « réduire les animations », elle est affichée d'emblée. */
+.route-line-h {
+  transform-origin: left center;
+}
+.route-line-v {
+  transform-origin: center top;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .route-line-h {
+      animation: route-draw-x linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 50%;
+    }
+    .route-line-v {
+      animation: route-draw-y linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 60%;
+    }
+  }
+}
+@keyframes route-draw-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes route-draw-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* ─── FAQ : la réponse s'ouvre en hauteur + fondu (250 ms) là où le navigateur le permet ─── */
+@supports (interpolate-size: allow-keywords) {
+  .faq-item {
+    interpolate-size: allow-keywords;
+  }
+  .faq-item::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      block-size 250ms var(--ease-out),
+      opacity 250ms var(--ease-out),
+      content-visibility 250ms allow-discrete;
+  }
+  .faq-item[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
 /* ─── Gate : masqué sans flash si déjà franchi pendant la session ─── */
 html[data-gate="passed"] #entry-gate {
   display: none;
