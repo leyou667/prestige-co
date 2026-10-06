@@ -8,7 +8,9 @@ export const SITE = {
   ).replace(/\/$/, ""),
   description:
     "PRESTIGE CONCIERGERIE — conciergerie automobile et location de véhicules, de la citadine économique à la supercar, en Belgique et dans le Nord de la France jusqu'à Paris.",
-  whatsapp: (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "32470000000").replace(/\D/g, ""),
+  whatsapp: (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "32492857149").replace(/\D/g, ""),
+  /** Numéro WhatsApp tel qu'affiché sur le site */
+  whatsappDisplay: process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY || "+32 492 85 71 49",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@prestige-conciergerie.com",
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+32 470 00 00 00",
   logo: "/logo/logo-prestige-conciergerie.png",

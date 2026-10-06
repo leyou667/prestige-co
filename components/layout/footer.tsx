@@ -21,7 +21,7 @@ export function Footer() {
           </p>
           <div className="mt-6 flex flex-col items-start text-sm">
             <a href={whatsappUrl(GENERIC_WHATSAPP_MESSAGE)} className={linkCls} target="_blank" rel="noopener noreferrer">
-              WhatsApp · <span className="nums">{SITE.phone}</span>
+              WhatsApp : <span className="nums">{SITE.whatsappDisplay}</span>
             </a>
             <a href={`mailto:${SITE.email}`} className={linkCls}>
               {SITE.email}
