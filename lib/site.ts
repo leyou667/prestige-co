@@ -12,7 +12,7 @@ export const SITE = {
   /** Numéro WhatsApp tel qu'affiché sur le site */
   whatsappDisplay: process.env.NEXT_PUBLIC_WHATSAPP_DISPLAY || "+32 492 85 71 49",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@prestige-conciergerie.com",
-  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+32 470 00 00 00",
+  phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "+32 492 85 71 49",
   logo: "/logo/logo-prestige-conciergerie.png",
   areaServed: [
     { type: "Country", name: "Belgique" },
