@@ -41,6 +41,11 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
     { icon: CalendarDays, label: "Disponibilité", value: vehicle.available ? "Disponible — voir le calendrier" : "Sur demande" },
   ];
 
+  // Carte 3D : une autre vue que la 1re photo de la galerie (3/4 arrière de préférence)
+  const tiltImage =
+    vehicle.photos.slice(1).find((p) => p.alt.includes("trois-quarts arrière"))?.src ??
+    vehicle.photos.slice(1).find((p) => /trois-quarts avant|vue avant/.test(p.alt))?.src;
+
   const url = `${SITE.url}${vehicleHref(vehicle)}`;
   const images = (vehicle.photos.length ? vehicle.photos.map((p) => p.src) : [vehicle.cardImage].filter(Boolean)).map((s) => `${SITE.url}${s}`);
 
@@ -59,7 +64,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         {/* a. En-tête */}
         <header className="mb-6">
           <p className="eyebrow">
-            {category.name} · Catégorie {vehicle.category}
+            {category.name}, catégorie {vehicle.category}
           </p>
           <h1 className="mt-3 font-display text-4xl font-light leading-tight sm:text-5xl">
             Location {name}
@@ -68,7 +73,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-2xs uppercase tracking-[0.1em]",
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs",
                 vehicle.available ? "border-silver/40 text-silver" : "border-white/20 text-muted",
               )}
             >
@@ -76,8 +81,8 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
               {vehicle.available ? "Disponible" : "Sur demande"}
             </span>
             <p className="nums">
-              <span className="font-display text-3xl text-gold">{formatPrice(vehicle.pricePerDay)}</span>
-              <span className="text-sm text-muted"> / jour</span>
+              <span className="font-display text-4xl text-gold">{formatPrice(vehicle.pricePerDay)}</span>
+              <span className="text-sm text-muted"> par jour</span>
             </p>
             <ShareButton title={`Location ${vehicleName(vehicle, "full")} — PRESTIGE CONCIERGERIE`} />
           </div>
@@ -99,7 +104,14 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           <Gallery vehicle={vehicle} />
         </div>
         <aside className="flex flex-col items-center gap-10 lg:col-span-5 lg:items-stretch">
-          <VehicleTiltCard vehicle={vehicle} variant="focus" ctaLabel="Demander un devis" ctaHref={`/devis?vehicule=${vehicle.id}`} className="mb-6" />
+          <VehicleTiltCard
+            vehicle={vehicle}
+            variant="focus"
+            image={tiltImage}
+            ctaLabel="Demander un devis"
+            ctaHref={`/devis?vehicule=${vehicle.id}`}
+            className="mb-6"
+          />
           <ul className="flex w-full flex-wrap justify-center gap-2">
             {vehicle.features.map((f) => (
               <li key={f} className="chip hover:border-white/10 hover:text-subtle">
@@ -122,12 +134,8 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
           </h2>
           <dl className="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/5 bg-white/5 sm:grid-cols-2">
             <div className="flex items-center justify-between bg-anthracite px-5 py-4 sm:col-span-2">
-              <dt className="label">Marque · Modèle</dt>
+              <dt className="label">Marque et modèle</dt>
               <dd className="text-sm">{vehicleName(vehicle, "full")}</dd>
-            </div>
-            <div className="flex items-center justify-between bg-anthracite px-5 py-4 sm:col-span-2">
-              <dt className="label">Prix / jour</dt>
-              <dd className="nums font-display text-2xl text-gold">{formatPrice(vehicle.pricePerDay)}</dd>
             </div>
             {specs.map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex items-center justify-between gap-4 bg-anthracite px-5 py-4">
@@ -189,7 +197,7 @@ export function VehicleDetail({ vehicle }: { vehicle: Vehicle }) {
         <h2 id="similaires" className="mb-8 font-display text-3xl font-light">
           Vous aimerez aussi
         </h2>
-        <VehicleGrid vehicles={similar} layout="fixed" />
+        <VehicleGrid vehicles={similar} layout="carousel" />
       </section>
 
       <MobileBookingBar vehicle={vehicle} />

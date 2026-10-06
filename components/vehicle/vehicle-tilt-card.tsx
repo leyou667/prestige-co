@@ -24,6 +24,8 @@ interface VehicleTiltCardProps {
   ctaHref?: string;
   /** Indisponible sur les dates recherchées */
   unavailable?: boolean;
+  /** Photo affichée à la place de la photo de carte (fiche : une autre vue que la galerie) */
+  image?: string;
   className?: string;
 }
 
@@ -33,7 +35,7 @@ const clamp = (v: number) => Math.max(-0.5, Math.min(0.5, v));
 const isCoarse = () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
 
 export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardProps>(
-  ({ vehicle, variant = "grid", city, priority, onSelect, ctaLabel = "Voir le véhicule", ctaHref, unavailable, className }, ref) => {
+  ({ vehicle, variant = "grid", city, priority, onSelect, ctaLabel = "Voir le véhicule", ctaHref, unavailable, image, className }, ref) => {
     const category = getCategory(vehicle.category);
     const href = ctaHref ?? vehicleHref(vehicle);
     const focus = variant === "focus";
@@ -43,8 +45,9 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
     const springConfig = { damping: 15, stiffness: 150 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
-    const rotateX = useTransform(springY, [-0.5, 0.5], ["8deg", "-8deg"]);
-    const rotateY = useTransform(springX, [-0.5, 0.5], ["-8deg", "8deg"]);
+    const tilt = focus ? 5 : 8;
+    const rotateX = useTransform(springY, [-0.5, 0.5], [`${tilt}deg`, `-${tilt}deg`]);
+    const rotateY = useTransform(springX, [-0.5, 0.5], [`-${tilt}deg`, `${tilt}deg`]);
     // Reflet lumineux qui suit l'inclinaison (desktop uniquement, masqué en CSS sur écran tactile)
     const glareX = useTransform(springX, [-0.5, 0.5], [20, 80]);
     const glareY = useTransform(springY, [-0.5, 0.5], [20, 80]);
@@ -128,16 +131,19 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
         )}
       >
         <div className="absolute inset-3 grid grid-rows-[1fr_auto] overflow-hidden rounded-xl">
-          <VehicleVisual vehicle={vehicle} priority={priority} fit="full" className="transition-transform duration-700 group-hover:scale-[1.03]" />
+          <VehicleVisual
+            vehicle={image ? { ...vehicle, cardImage: image } : vehicle}
+            priority={priority}
+            fit="full"
+            className="transition-transform duration-300 [@media(hover:hover)]:group-hover:scale-[1.03]"
+          />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.45)_30%,rgba(0,0,0,0)_50%,rgba(0,0,0,0.7)_68%,rgba(0,0,0,0.94)_100%)]" />
           <m.div aria-hidden="true" style={{ background: glare }} className="pointer-events-none absolute inset-0 [@media(pointer:coarse)]:hidden" />
 
           <div className="relative flex h-full flex-col justify-between p-4 text-white sm:p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="whitespace-nowrap text-2xs uppercase tracking-wide2 text-gold-soft drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                  {category.label} · {vehicle.category}
-                </p>
+                <p className="whitespace-nowrap text-xs text-silver drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{category.name}</p>
                 <h3 className="mt-1 font-display text-2xl leading-tight">
                   {vehicle.brand} {vehicle.model}
                 </h3>
@@ -145,7 +151,7 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
               </div>
               <span
                 className={cn(
-                  "mt-0.5 inline-flex shrink-0 items-center gap-1.5 rounded-full border bg-black/40 px-2 py-1 text-2xs uppercase tracking-[0.1em]",
+                  "mt-0.5 inline-flex shrink-0 items-center gap-1.5 rounded-full border bg-black/40 px-2.5 py-1 text-xs",
                   available ? "border-silver/40 text-silver" : "border-white/20 text-muted",
                 )}
               >
@@ -163,14 +169,16 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
                   <MapPin className="h-3.5 w-3.5" /> {city ?? vehicle.baseCity}
                 </span>
               </div>
-              <p className="nums text-lg">
-                <span className="font-medium">{formatPrice(vehicle.pricePerDay)}</span>
-                <span className="text-sm text-subtle"> / jour</span>
-              </p>
+              {!focus && (
+                <p className="nums text-lg">
+                  <span className="font-medium">{formatPrice(vehicle.pricePerDay)}</span>
+                  <span className="text-sm text-subtle"> / jour</span>
+                </p>
+              )}
               <Link
                 href={href}
                 onClick={onSelect}
-                className="block min-h-11 w-full rounded-lg bg-white/10 py-3 text-center text-xs font-medium uppercase tracking-wide2 ring-1 ring-inset ring-white/20 transition hover:scale-[1.02] hover:bg-white/20 active:scale-[0.98]"
+                className="block min-h-11 w-full rounded-lg bg-white/10 py-3 text-center text-[0.72rem] font-medium uppercase tracking-[0.14em] ring-1 ring-inset ring-white/20 transition hover:bg-white/20 active:scale-[0.97]"
               >
                 {ctaLabel}
               </Link>
@@ -178,7 +186,7 @@ export const VehicleTiltCard = React.forwardRef<HTMLDivElement, VehicleTiltCardP
           </div>
         </div>
         {focus && touchHint && gyro === "idle" && (
-          <p className="absolute -bottom-7 left-0 right-0 text-center text-2xs uppercase tracking-wide2 text-muted">
+          <p className="absolute -bottom-7 left-0 right-0 text-center text-xs text-muted">
             Touchez la carte puis inclinez votre téléphone
           </p>
         )}

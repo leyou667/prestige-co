@@ -1,4 +1,4 @@
-import { VehicleTiltCard } from "./vehicle-tilt-card";
+import { VehicleCard } from "./vehicle-card";
 import { vehicleHref, type Vehicle } from "@/lib/vehicles";
 import { cn } from "@/lib/utils";
 
@@ -35,13 +35,13 @@ export function VehicleGrid({
       )}
     >
       {vehicles.map((v, i) => (
-        <li key={v.id} className={cn("flex justify-center", layout === "carousel" && "w-[85%] shrink-0 snap-start sm:w-auto")}>
-          <VehicleTiltCard
+        <li key={v.id} className={cn("flex", layout === "carousel" && "w-[85%] shrink-0 snap-start sm:w-auto")}>
+          <VehicleCard
             vehicle={v}
             city={city}
             priority={i < priorityCount}
             unavailable={unavailable?.has(v.id)}
-            ctaHref={query ? `${vehicleHref(v)}?${query}` : undefined}
+            href={query ? `${vehicleHref(v)}?${query}` : undefined}
           />
         </li>
       ))}

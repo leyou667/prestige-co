@@ -223,7 +223,9 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
 
       <h2 className="sr-only">Résultats de la recherche</h2>
       {results.length ? (
-        <VehicleGrid vehicles={results} city={city?.name} query={query || undefined} unavailable={unavailable} priorityCount={2} />
+        <div key={results.map((v) => v.id).join()} className="animate-[fade-in_150ms_cubic-bezier(0.23,1,0.32,1)_both]">
+          <VehicleGrid vehicles={results} city={city?.name} query={query || undefined} unavailable={unavailable} priorityCount={2} />
+        </div>
       ) : (
         <div className="rounded-2xl border border-white/10 py-20 text-center">
           <p className="font-display text-2xl">Aucun véhicule ne correspond.</p>
