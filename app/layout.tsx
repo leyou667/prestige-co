@@ -84,7 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: gateBootScript }} />
         {/* Sans JavaScript, l'écran d'entrée ne peut pas être franchi : on l'ignore et le site reste navigable */}
         <noscript>
-          <style>{`#entry-gate{display:none!important}html body{overflow:auto!important}`}</style>
+          <style>{`#entry-gate{display:none!important}html body{overflow:auto!important}.hero-reveal,#site-header{opacity:1!important;transform:none!important;visibility:visible!important}`}</style>
         </noscript>
       </head>
       <body>

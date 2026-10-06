@@ -126,6 +126,29 @@
   }
 }
 
+/* ─── Accueil : contenu du hero révélé à la sortie de l'écran d'entrée ───
+   La vidéo, elle, ne s'interrompt pas. Une seule séquence orchestrée, décalée de 70 ms par élément. */
+.hero-reveal {
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+  transition-delay: calc(120ms + var(--i, 0) * 70ms);
+}
+/* Le menu n'apparaît qu'en entrant : l'écran d'entrée reste seul sur la vidéo */
+#site-header {
+  transition:
+    opacity 500ms var(--ease-out),
+    background-color 500ms var(--ease-out);
+}
+html:not([data-gate]) #site-header {
+  opacity: 0;
+  visibility: hidden;
+}
+html:not([data-gate]) .hero-reveal {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
 /* ─── Gate : masqué sans flash si déjà franchi pendant la session ─── */
 html[data-gate="passed"] #entry-gate {
   display: none;

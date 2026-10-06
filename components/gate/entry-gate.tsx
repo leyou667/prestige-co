@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "pc-gate";
 export const GATE_PASSED_EVENT = "pc:gate-passed";
-const EXIT_MS = 700;
+const EXIT_MS = 500;
 
 /** Script inline (dans <head>) : évite tout flash du gate s'il a déjà été franchi pendant la session. */
 export const gateBootScript = `try{if(sessionStorage.getItem("${STORAGE_KEY}")==="1")document.documentElement.dataset.gate="passed"}catch(e){}`;
@@ -51,6 +51,8 @@ export function EntryGate() {
         else router.push("/#conseiller");
       }
       setState("leaving");
+      // « leaving » : le contenu du hero commence à apparaître pendant que l'écran d'entrée s'efface
+      document.documentElement.dataset.gate = "leaving";
       window.setTimeout(() => {
         document.documentElement.dataset.gate = "passed";
         window.dispatchEvent(new Event(GATE_PASSED_EVENT));
@@ -75,6 +77,8 @@ export function EntryGate() {
   }, [state, enter]);
 
   if (state === "closed") return null;
+  // Sur l'accueil, la vidéo est celle du hero, juste en dessous : elle continue après l'entrée
+  const overHero = pathname === "/";
 
   return (
     <div
@@ -83,12 +87,13 @@ export function EntryGate() {
       aria-modal="true"
       aria-label="Bienvenue chez PRESTIGE CONCIERGERIE"
       className={cn(
-        "fixed inset-0 z-[100] flex flex-col items-center justify-between overflow-hidden bg-ink transition-opacity ease-out",
+        "fixed inset-0 z-[100] flex flex-col items-center justify-between overflow-hidden transition-opacity ease-out",
+        !overHero && "bg-ink",
         state === "leaving" && "pointer-events-none opacity-0",
       )}
       style={{ transitionDuration: `${EXIT_MS}ms` }}
     >
-      <BackgroundVideo active={state === "open"} />
+      {!overHero && <BackgroundVideo active={state === "open"} />}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/25 to-black/80" />
 
       <div className="relative z-10 mt-10 w-36 animate-fade-in sm:mt-14 sm:w-48 [animation-delay:150ms]">
@@ -96,8 +101,8 @@ export function EntryGate() {
       </div>
 
       <div className="relative z-10 mb-10 flex w-full flex-col items-center px-5 sm:mb-16">
-        <p className="title-luxe mb-3 animate-fade-in text-center text-[0.7rem] text-subtle [animation-delay:350ms] sm:text-xs">
-          Conciergerie automobile — Belgique · Nord de la France · Paris
+        <p className="mb-3 animate-fade-in text-center text-sm text-subtle [animation-delay:350ms]">
+          Conciergerie automobile en Belgique, dans le Nord de la France et à Paris
         </p>
         <p className="mb-9 animate-fade-up text-center font-display text-3xl font-light text-white [animation-delay:450ms] sm:text-5xl">
           L&apos;exception, à votre porte.

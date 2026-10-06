@@ -44,7 +44,7 @@ export function Header() {
       <header
         id="site-header"
         className={cn(
-          "sticky top-0 z-50 h-[var(--header-h)] transition-colors duration-500",
+          "sticky top-0 z-50 h-[var(--header-h)]",
           scrolled || menuOpen ? "bg-ink/95 shadow-[0_1px_0_rgba(255,255,255,0.06)]" : "bg-gradient-to-b from-black/70 to-transparent",
         )}
       >

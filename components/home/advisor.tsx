@@ -38,17 +38,17 @@ export function Advisor({ className }: { className?: string }) {
   return (
     <div
       id="conseiller"
-      className={cn("scroll-mt-28 rounded-2xl border border-white/10 bg-black/65 p-5 sm:p-6", className)}
+      className={cn("scroll-mt-[calc(var(--header-h)+1.5rem)] rounded-2xl border border-white/10 bg-ink p-5 sm:p-7", className)}
       aria-live="polite"
     >
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 text-gold">
-            <Sparkles className="h-4 w-4" />
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-silver">
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-2xs uppercase tracking-luxe text-muted">Conseiller IA</p>
-            <h2 className="font-display text-xl leading-tight">Le véhicule idéal en 4 questions</h2>
+            <p className="text-sm text-muted">Conseiller IA</p>
+            <h3 className="font-display text-xl leading-tight">Le véhicule idéal en 4 questions</h3>
           </div>
         </div>
         {step > 0 && (
@@ -89,7 +89,7 @@ export function Advisor({ className }: { className?: string }) {
         {!done ? (
           <m.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.28 }}>
             <p className="mb-4 text-base text-white/90">
-              <span className="mr-2 text-xs text-gold">Q{step + 1}.</span>
+              <span className="nums mr-2 text-sm text-muted">{step + 1}/{QUESTIONS.length}</span>
               {QUESTIONS[step].title}
               {QUESTIONS[step].optional && <span className="ml-2 text-xs text-muted">(optionnel)</span>}
             </p>
@@ -100,7 +100,7 @@ export function Advisor({ className }: { className?: string }) {
                   type="button"
                   onClick={() => choose(QUESTIONS[step].key, o.value)}
                   className={cn(
-                    "min-h-11 rounded-full border px-4 py-2.5 text-xs transition",
+                    "min-h-11 rounded-full border px-4 py-2.5 text-sm transition active:scale-[0.97]",
                     answers[QUESTIONS[step].key] === o.value
                       ? "border-gold bg-gold/15 text-white"
                       : "border-white/15 bg-white/[0.03] text-white/80 hover:border-gold/60 hover:text-white",
@@ -124,15 +124,15 @@ export function Advisor({ className }: { className?: string }) {
                   </div>
                   <div className="flex min-w-0 flex-1 flex-col justify-between">
                     <div>
-                      <p className="text-2xs uppercase tracking-wide2 text-gold/90">{getCategory(vehicle.category).label}</p>
+                      <p className="text-xs text-silver">{getCategory(vehicle.category).name}</p>
                       <p className="truncate font-display text-lg leading-tight">
                         {vehicle.brand} {vehicle.model}
                       </p>
-                      <p className="truncate text-2xs text-muted">{reasons.join(" · ")}</p>
+                      <p className="truncate text-xs text-muted">{reasons.join(", ")}</p>
                     </div>
                     <div className="mt-1 flex items-center justify-between gap-2">
                       <span className="nums text-sm">{formatPrice(vehicle.pricePerDay)}<span className="text-muted"> / j</span></span>
-                      <Link href={vehicleHref(vehicle)} className="nums rounded-full bg-white px-3.5 py-2.5 text-2xs font-medium uppercase tracking-wide2 text-ink transition hover:bg-gold">
+                      <Link href={vehicleHref(vehicle)} className="rounded-full bg-white px-3.5 py-2.5 text-xs font-medium text-ink transition hover:bg-gold active:scale-[0.97]">
                         Voir ce véhicule
                       </Link>
                     </div>
