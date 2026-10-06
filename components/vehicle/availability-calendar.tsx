@@ -114,8 +114,8 @@ export function AvailabilityCalendar({
       </div>
 
       {availability.error && (
-        <p role="status" className="mb-4 flex items-start gap-2 rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-subtle">
-          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />
+        <p role="status" className="mb-4 flex items-start gap-2 rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm text-subtle">
+          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-silver" />
           Disponibilités non vérifiées pour le moment : nous confirmerons la disponibilité avec vous sur WhatsApp.
         </p>
       )}
@@ -157,7 +157,7 @@ export function AvailabilityCalendar({
                         past && "text-white/20",
                         !past && !busy && "text-white/85 hover:bg-white/10",
                         busy && !past && "cursor-not-allowed bg-red-500/10 text-red-300/60 line-through",
-                        iso === today && "ring-1 ring-inset ring-gold/60",
+                        iso === today && "ring-1 ring-inset ring-white/50",
                         selected && !busy && "bg-gold/20 text-white",
                         edge && "!bg-gold !text-ink",
                         !onSelect && "cursor-default",
@@ -185,7 +185,7 @@ export function AvailabilityCalendar({
             <span className="h-2.5 w-2.5 rounded-sm bg-gold" /> Votre sélection
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm ring-1 ring-inset ring-gold/60" /> Aujourd&apos;hui
+            <span className="h-2.5 w-2.5 rounded-sm ring-1 ring-inset ring-white/50" /> Aujourd&apos;hui
           </span>
         </div>
         <button type="button" onClick={availability.reload} className="inline-flex min-h-9 items-center gap-1.5 hover:text-white" aria-label="Actualiser les disponibilités">

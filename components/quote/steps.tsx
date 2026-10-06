@@ -36,9 +36,9 @@ export function VehicleStep({ selected, onPick }: { selected: string; onPick: (i
                   <VehicleVisual vehicle={v} sizes="80px" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-sm">{vehicleName(v)}</span>
-                  {v.variant && <span className="block truncate text-2xs text-muted">{v.variant}</span>}
-                  <span className="nums block text-xs text-muted">{formatPrice(v.pricePerDay)} / jour</span>
+                  <span className="block truncate text-base">{vehicleName(v)}</span>
+                  {v.variant && <span className="block truncate text-xs text-muted">{v.variant}</span>}
+                  <span className="nums block text-sm text-muted">{formatPrice(v.pricePerDay)} / jour</span>
                 </span>
               </button>
             ))}
@@ -53,7 +53,7 @@ export function CityStep({ vehicle, selected, onPick }: { vehicle: Vehicle; sele
   return (
     <fieldset>
       <legend className="mb-2 font-display text-3xl font-light">Dans quelle ville ?</legend>
-      <p className="mb-6 text-sm text-muted">Villes où la {vehicleName(vehicle)} peut être livrée.</p>
+      <p className="mb-6 text-base text-muted">Villes où la {vehicleName(vehicle)} peut être livrée.</p>
       <div className="flex flex-wrap gap-2">
         {citiesForVehicle(vehicle).map((c) => (
           <button
@@ -139,11 +139,11 @@ export function OptionsStep({
               >
                 <Checkbox checked={checked} onCheckedChange={(v) => onToggle(o.id, v === true)} className="mt-0.5" />
                 <span className="flex-1">
-                  <span className="flex justify-between gap-2 text-sm">
+                  <span className="flex justify-between gap-2 text-base">
                     {o.label}
                     <span className="nums shrink-0 text-subtle">{price ? `${formatPrice(price)}${o.mode === "perDay" ? " / j" : ""}` : "Sur devis"}</span>
                   </span>
-                  <span className="mt-1 block text-xs text-muted">{o.description}</span>
+                  <span className="mt-1 block text-sm text-muted">{o.description}</span>
                 </span>
               </label>
             </li>
@@ -151,7 +151,7 @@ export function OptionsStep({
         })}
       </ul>
       <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
-        <p className="text-xs text-muted sm:col-span-3">Vos coordonnées (facultatif) — pour que nous puissions vous recontacter.</p>
+        <p className="text-sm text-muted sm:col-span-3">Vos coordonnées (facultatif) — pour que nous puissions vous recontacter.</p>
         <input className="field" aria-label="Nom" placeholder="Nom" maxLength={80} value={contact.name} onChange={(e) => onContact({ ...contact, name: e.target.value })} autoComplete="name" />
         <input className="field" aria-label="Téléphone" placeholder="Téléphone" maxLength={30} value={contact.phone} onChange={(e) => onContact({ ...contact, phone: e.target.value })} autoComplete="tel" inputMode="tel" />
         <input className="field" aria-label="E-mail" placeholder="E-mail" maxLength={120} type="email" value={contact.email} onChange={(e) => onContact({ ...contact, email: e.target.value })} autoComplete="email" />

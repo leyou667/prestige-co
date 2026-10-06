@@ -12,6 +12,8 @@ const config: Config = {
         graphite: "#242424",
         gold: { DEFAULT: "#C8A96A", soft: "#D9C193", deep: "#A88B4E" },
         silver: "#BFC3C8",
+        // Blanc « phare » des titres : moins dur que le blanc pur sur le noir
+        headline: "#F4F5F7",
         border: "rgba(255,255,255,0.1)",
         background: "#0A0A0A",
         foreground: "#FFFFFF",
@@ -49,10 +51,16 @@ const config: Config = {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
+        "sheet-up": {
+          from: { transform: "translateY(100%)" },
+          to: { transform: "translateY(0)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) both",
         "fade-in": "fade-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) both",
+        // Feuille mobile : courbe « tiroir », 400 ms
+        "sheet-up": "sheet-up 0.4s cubic-bezier(0.32, 0.72, 0, 1) both",
       },
     },
   },

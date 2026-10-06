@@ -19,7 +19,7 @@ export interface QuoteSheetProps {
   minLicense: number;
 }
 
-const lbl = "text-2xs uppercase tracking-wide2 text-muted print:text-ink/60";
+const lbl = "text-xs text-muted print:text-ink/60";
 
 /** Récapitulatif de devis — affichage écran (sombre) et impression / PDF (fond blanc, logo inversé). */
 export function QuoteSheet(p: QuoteSheetProps) {
@@ -30,7 +30,7 @@ export function QuoteSheet(p: QuoteSheetProps) {
       <header className="flex flex-col gap-6 border-b border-white/10 bg-ink p-6 print:border-ink/15 print:bg-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <Image src={SITE.logo} alt={SITE.name} width={645} height={368} sizes="112px" className="h-auto w-28 print:invert" priority />
         <div className="text-left sm:text-right">
-          <p className="title-luxe text-xs text-muted print:text-ink/60">Devis estimatif</p>
+          <p className="text-sm text-muted print:text-ink/60">Devis estimatif</p>
           <p className="nums mt-1 font-display text-2xl">{p.number}</p>
           <p className="text-xs text-muted print:text-ink/50">Émis le {issued}</p>
         </div>
@@ -86,7 +86,7 @@ export function QuoteSheet(p: QuoteSheetProps) {
         </tbody>
         <tfoot>
           <tr>
-            <td className="px-6 py-5 text-2xs uppercase tracking-luxe sm:px-8">Total estimé</td>
+            <td className="px-6 py-5 text-sm sm:px-8">Total estimé</td>
             <td className="px-6 py-5 text-right font-display text-3xl text-gold sm:px-8 print:text-ink">{formatPrice(p.quote.total)}</td>
           </tr>
         </tfoot>

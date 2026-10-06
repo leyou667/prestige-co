@@ -93,7 +93,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
     <div ref={top} className="scroll-mt-[calc(var(--header-h)+1rem)]">
       {/* Étapes : libellé explicite sur mobile, barre segmentée sur tous les écrans */}
       <nav aria-label="Étapes du devis" className="no-print mb-10">
-        <p className="mb-3 text-xs text-subtle sm:hidden" aria-live="polite">
+        <p className="mb-3 text-sm text-subtle sm:hidden" aria-live="polite">
           Étape {step + 1}/{STEPS.length} · {STEPS[step]}
         </p>
         <ol className="grid grid-cols-5 gap-2">
@@ -108,7 +108,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
                 className={cn("block w-full py-2 text-left", i > step && "cursor-default")}
               >
                 <span className={cn("block h-0.5 rounded-full transition-colors", i <= step ? "bg-gold" : "bg-white/15")} />
-                <span className={cn("mt-2 hidden text-xs sm:block", i === step ? "text-white" : "text-muted")}>
+                <span className={cn("mt-2 hidden text-sm sm:block", i === step ? "text-white" : "text-muted")}>
                   {i + 1}. {s}
                 </span>
               </button>
@@ -222,7 +222,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
             </div>
             {sent !== "idle" && (
               <p className={cn("inline-flex items-center gap-2 text-sm", sent === "error" ? "text-red-300" : "text-subtle")} role="status">
-                <Check className="h-4 w-4 text-gold" />
+                <Check className="h-4 w-4 text-silver" />
                 {sent === "synced"
                   ? "Demande enregistrée — nous vous confirmons la disponibilité sur WhatsApp."
                   : sent === "error"
@@ -264,7 +264,7 @@ export function QuoteBuilder({ initial }: { initial: QuoteInitial }) {
         </div>
       )}
       {vehicle && step === 0 && (
-        <p className="no-print mt-4 text-xs text-muted">
+        <p className="no-print mt-4 text-sm text-muted">
           Véhicule sélectionné :{" "}
           <Link href={vehicleHref(vehicle)} className="underline">
             {label}

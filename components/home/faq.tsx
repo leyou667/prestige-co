@@ -16,7 +16,7 @@ export function Faq() {
               <details className="faq-item group">
                 <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-base text-white transition-colors hover:text-gold-soft [&::-webkit-details-marker]:hidden">
                   {item.q}
-                  <Plus className="h-4 w-4 shrink-0 text-gold transition-transform duration-200 group-open:rotate-45" aria-hidden="true" />
+                  <Plus className="h-4 w-4 shrink-0 text-silver transition-transform duration-200 group-open:rotate-45" aria-hidden="true" />
                 </summary>
                 <p className="pb-6 pr-8 text-sm leading-relaxed text-muted">{item.a}</p>
               </details>

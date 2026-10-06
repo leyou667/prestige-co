@@ -103,7 +103,7 @@ export function Advisor({ className }: { className?: string }) {
                     "min-h-11 rounded-full border px-4 py-2.5 text-sm transition active:scale-[0.97]",
                     answers[QUESTIONS[step].key] === o.value
                       ? "border-gold bg-gold/15 text-white"
-                      : "border-white/15 bg-white/[0.03] text-white/80 hover:border-gold/60 hover:text-white",
+                      : "border-white/15 bg-white/[0.03] text-white/80 hover:border-white/40 hover:text-white",
                   )}
                 >
                   {o.label}

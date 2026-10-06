@@ -131,7 +131,7 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
                   onClick={() => toggleCategory(c.code)}
                   aria-pressed={f.categories.includes(c.code)}
                   className={cn(
-                    "min-h-10 rounded-full border px-4 py-2.5 text-xs transition",
+                    "min-h-10 rounded-full border px-4 py-2.5 text-sm transition active:scale-[0.97]",
                     f.categories.includes(c.code) ? "border-gold bg-gold text-ink" : "border-white/15 text-subtle hover:border-white/40",
                   )}
                 >
@@ -148,7 +148,7 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
               aria-expanded={panelOpen}
               aria-controls="catalogue-filters"
               aria-label={`Filtres${activeCount ? ` (${activeCount} actifs)` : ""}`}
-              className="relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/15 px-3.5 text-xs uppercase tracking-wide2 text-subtle transition hover:border-white/40"
+              className="relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/15 px-3.5 text-sm text-subtle transition hover:border-white/40"
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline" aria-hidden="true">
@@ -190,7 +190,7 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
       )}
 
       <div className="mb-6 mt-8 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted" aria-live="polite">
+        <p className="text-base text-muted" aria-live="polite">
           <span className="nums text-white">{results.length}</span> véhicule{results.length > 1 ? "s" : ""}
           {city && (
             <>
@@ -209,11 +209,11 @@ export function Catalogue({ initial }: { initial: Partial<CatalogueFilters> }) {
         </p>
         <div className="flex items-center gap-3">
           {activeCount > 0 && (
-            <button type="button" onClick={reset} className="min-h-11 text-xs text-muted underline-offset-4 hover:text-white hover:underline">
+            <button type="button" onClick={reset} className="min-h-11 text-sm text-muted underline-offset-4 hover:text-white hover:underline">
               Réinitialiser
             </button>
           )}
-          <select value={sort} onChange={(e) => setSort(e.target.value as CatalogueSort)} className="field !w-auto !py-2.5 text-xs" aria-label="Trier">
+          <select value={sort} onChange={(e) => setSort(e.target.value as CatalogueSort)} className="field !w-auto !py-2.5 !text-sm" aria-label="Trier">
             <option value="price-asc">Prix croissant</option>
             <option value="price-desc">Prix décroissant</option>
             <option value="power-desc">Puissance</option>
