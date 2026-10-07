@@ -8,7 +8,7 @@ export function FinalCta() {
     <section aria-labelledby="final-titre" className="relative isolate overflow-hidden">
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[url(/video/hero-poster-480.webp)] bg-cover bg-[center_40%] md:bg-[url(/video/hero-poster.webp)]"
+        className="absolute inset-0 -z-10 bg-[url(/images/final-cta-bmw-x2-480.jpg)] bg-cover bg-[center_40%] md:bg-[url(/images/final-cta-bmw-x2.jpg)]"
       />
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-ink via-ink/80 to-ink/30" />
       <div className="container py-24 md:py-36">
