@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import { EntryGate, gateBootScript } from "@/components/gate/entry-gate";
+import { homeScrollTopBootScript } from "@/lib/scroll-boot";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: gateBootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: homeScrollTopBootScript }} />
         {/* Sans JavaScript, l'écran d'entrée ne peut pas être franchi : on l'ignore et le site reste navigable */}
         <noscript>
           <style>{`#entry-gate{display:none!important}html body{overflow:auto!important}.hero-reveal,#site-header{opacity:1!important;transform:none!important;visibility:visible!important}`}</style>
