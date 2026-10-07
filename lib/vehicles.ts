@@ -54,6 +54,22 @@ const STUDIO_PHOTOS = new Set([
   "renault-4-e-tech",
   "bmw-x2",
   "vw-t-roc",
+  "opel-adam",
+  "alfa-romeo-mito",
+  "ford-focus",
+  "opel-corsa-e",
+  "dacia-sandero",
+  "peugeot-2008",
+  "citroen-c4-picasso",
+  "renault-clio",
+  "fiat-500",
+  "opel-astra-plus",
+  "renault-captur",
+  "fiat-500l",
+  "citroen-c3",
+  "renault-kangoo-galerie",
+  "dacia-dokker",
+  "porsche-taycan",
 ]);
 
 function studioPhoto(id: string) {
@@ -88,7 +104,7 @@ function gallery(id: string, label: string, views: string[] = []): VehiclePhoto[
     }));
   }
   return views.map((view, i) => ({
-    src: `/vehicules/${id}/${id}-${String(i + 1).padStart(2, "0")}.jpg`,
+    src: i === 0 && STUDIO_PHOTOS.has(id) ? studioPhoto(id) : `/vehicules/${id}/${id}-${String(i + 1).padStart(2, "0")}.jpg`,
     alt: photoAlt(label, view),
   }));
 }
@@ -265,7 +281,7 @@ const SEEDS: Seed[] = [
     id: "porsche-taycan", brand: "Porsche", model: "Taycan", category: "S+", year: 2022, pricePerDay: 500,
     powerHp: 408, engine: "Électrique", fuel: "Électrique", transmission: "Automatique", seats: 4, doors: 4, style: "sport",
     features: ["408 ch", "100 % électrique", "Sportive grand tourisme"], baseCity: "Bruxelles", cities: ALL_CITIES,
-    views: ["vue trois-quarts arrière de nuit"],
+    views: ["vue trois-quarts avant"],
     description: "La Porsche Taycan 408 ch, sportive électrique d'exception : accélérations foudroyantes et silence absolu.",
   },
 ];
